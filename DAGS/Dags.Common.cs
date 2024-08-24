@@ -1,4 +1,4 @@
-﻿namespace GRIFTools.DAGS;
+﻿namespace GRIFTools;
 
 public partial class Dags
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 
-namespace GRIFTools.GROD;
+namespace GRIFTools;
 
 /// <summary>
 /// GROD - Game Resource Overlay Dictionary
@@ -23,7 +23,7 @@ public partial class Grod : IDictionary<string, string?>
     {
         get
         {
-            if (string.IsNullOrWhiteSpace(key) || key.Trim() == "")
+            if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
             key = key.Trim();
             if (UseOverlay && _overlay.TryGetValue(key, out string? value1))
@@ -35,7 +35,7 @@ public partial class Grod : IDictionary<string, string?>
         }
         set
         {
-            if (string.IsNullOrWhiteSpace(key) || key.Trim() == "")
+            if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
             key = key.Trim();
             if (UseOverlay)
@@ -60,6 +60,9 @@ public partial class Grod : IDictionary<string, string?>
     public ICollection<string> KeysOverlay =>
         UseOverlay ? _overlay.Keys : new List<string>();
 
+    /// <summary>
+    /// Get a list containing all values from the base or base plus overlay collections.
+    /// </summary>
     public ICollection<string?> Values =>
         UseOverlay ? AllValues() : _base.Values;
 
@@ -76,7 +79,7 @@ public partial class Grod : IDictionary<string, string?>
     /// </summary>
     public void Add(string key, string? value)
     {
-        if (string.IsNullOrWhiteSpace(key) || key.Trim() == "")
+        if (string.IsNullOrWhiteSpace(key))
             throw new ArgumentNullException(nameof(key));
         key = key.Trim();
         this[key] = value;
@@ -88,7 +91,7 @@ public partial class Grod : IDictionary<string, string?>
     public void Add(KeyValuePair<string, string?> item)
     {
         var key = item.Key;
-        if (string.IsNullOrWhiteSpace(key) || key.Trim() == "")
+        if (string.IsNullOrWhiteSpace(key))
             throw new ArgumentNullException(nameof(item));
         key = key.Trim();
         this[key] = item.Value;
@@ -122,7 +125,7 @@ public partial class Grod : IDictionary<string, string?>
     public bool Contains(KeyValuePair<string, string?> item)
     {
         var key = item.Key;
-        if (string.IsNullOrWhiteSpace(key) || key.Trim() == "")
+        if (string.IsNullOrWhiteSpace(key))
             throw new ArgumentNullException(nameof(item));
         key = key.Trim();
         if (UseOverlay && _overlay.TryGetValue(key, out string? value1))
@@ -134,7 +137,7 @@ public partial class Grod : IDictionary<string, string?>
 
     public bool ContainsKey(string key)
     {
-        if (string.IsNullOrWhiteSpace(key) || key.Trim() == "")
+        if (string.IsNullOrWhiteSpace(key))
             throw new ArgumentNullException(nameof(key));
         key = key.Trim();
         return UseOverlay && _overlay.ContainsKey(key) || _base.ContainsKey(key);
@@ -176,7 +179,7 @@ public partial class Grod : IDictionary<string, string?>
 
     public bool Remove(string key)
     {
-        if (string.IsNullOrWhiteSpace(key) || key.Trim() == "")
+        if (string.IsNullOrWhiteSpace(key))
             throw new ArgumentNullException(nameof(key));
         key = key.Trim();
         bool result = _base.Remove(key);
@@ -188,7 +191,7 @@ public partial class Grod : IDictionary<string, string?>
     public bool Remove(KeyValuePair<string, string?> item)
     {
         var key = item.Key;
-        if (string.IsNullOrWhiteSpace(key) || key.Trim() == "")
+        if (string.IsNullOrWhiteSpace(key))
             throw new ArgumentNullException(nameof(item));
         key = key.Trim();
         bool result = _base.ContainsKey(key) && _base.Remove(key);
@@ -202,7 +205,7 @@ public partial class Grod : IDictionary<string, string?>
     /// </summary>
     public void Revert(string key)
     {
-        if (string.IsNullOrWhiteSpace(key) || key.Trim() == "")
+        if (string.IsNullOrWhiteSpace(key))
             throw new ArgumentNullException(nameof(key));
         key = key.Trim();
         if (UseOverlay)
@@ -211,7 +214,7 @@ public partial class Grod : IDictionary<string, string?>
 
     public bool TryGetValue(string key, [MaybeNullWhen(false)] out string value)
     {
-        if (string.IsNullOrWhiteSpace(key) || key.Trim() == "")
+        if (string.IsNullOrWhiteSpace(key))
             throw new ArgumentNullException(nameof(key));
         key = key.Trim();
         if (UseOverlay && _overlay.ContainsKey(key))

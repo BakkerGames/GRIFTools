@@ -1,14 +1,12 @@
-﻿using GRIFTools.DAGS;
-using GRIFTools.GROD;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
 
-namespace GRIFTools.GRIFData;
+namespace GRIFTools;
 
-public static class DataIO
+public static class GrodDataIO
 {
     /// <summary>
-    /// Read file data and add to GROD. Data is not cleared. Duplicate keys are overwritten.
+    /// Read file data and add to GROD. Data is not cleared first. Duplicate keys are overwritten.
     /// </summary>
     public static void LoadDataFromFile(string path, Grod grod)
     {
@@ -21,31 +19,31 @@ public static class DataIO
     }
 
     /// <summary>
-    /// Read string data and add to GROD. Data is not cleared. Duplicate keys are overwritten.
+    /// Read string data and add to GROD. Data is not cleared first. Duplicate keys are overwritten.
     /// </summary>
     public static void LoadDataFromString(string data, Grod grod)
     {
         var index = 0;
-        var validJson = false;
+        var jsonFormat = false;
 
         try
         {
             SkipWhitespace(data, ref index);
             if (index < data.Length && data[index] == '{')
             {
-                validJson = true;
+                jsonFormat = true;
                 index++;
             }
             while (index < data.Length)
             {
-                if (validJson && data[index] == '}')
+                if (jsonFormat && data[index] == '}')
                 {
                     index++;
                     break;
                 }
                 string key;
                 string value;
-                if (validJson)
+                if (jsonFormat)
                     (key, value) = GetKeyValueJson(data, ref index);
                 else
                     (key, value) = GetKeyValueGRIF(data, ref index);
@@ -60,9 +58,9 @@ public static class DataIO
     }
 
     /// <summary>
-    /// Save all GROD data to a file in GRIF format.
+    /// Save all GROD data to a file in JSON or GRIF format.
     /// </summary>
-    public static void SaveDataToFile(string path, Grod grod, bool validJson = false)
+    public static void SaveDataToFile(string path, Grod grod, bool jsonFormat = false)
     {
         if (string.IsNullOrEmpty(path))
         {
@@ -78,13 +76,13 @@ public static class DataIO
             Directory.CreateDirectory(dir);
         }
         var keys = grod.Keys.ToList();
-        File.WriteAllText(path, HeaderComment(path, validJson) + ExportData(grod, keys, validJson));
+        File.WriteAllText(path, HeaderComment(path, jsonFormat) + ExportData(grod, keys, jsonFormat));
     }
 
     /// <summary>
-    /// Save only the GROD Overlay data to a file in GRIF format.
+    /// Save only the GROD Overlay data to a file in JSON or GRIF format.
     /// </summary>
-    public static void SaveOverlayDataToFile(string path, Grod grod, bool validJson = false)
+    public static void SaveOverlayDataToFile(string path, Grod grod, bool jsonFormat = false)
     {
         if (string.IsNullOrEmpty(path))
         {
@@ -100,25 +98,25 @@ public static class DataIO
             Directory.CreateDirectory(dir);
         }
         var keys = grod.KeysOverlay.ToList();
-        File.WriteAllText(path, HeaderComment(path, validJson) + ExportData(grod, keys, validJson));
+        File.WriteAllText(path, HeaderComment(path, jsonFormat) + ExportData(grod, keys, jsonFormat));
     }
 
     /// <summary>
-    /// Save all GROD data to a string in GRIF format.
+    /// Save all GROD data to a string in JSON or GRIF format.
     /// </summary>
-    public static string SaveDataToString(Grod grod, bool validJson = false)
+    public static string SaveDataToString(Grod grod, bool jsonFormat = false)
     {
         var keys = grod.Keys.ToList();
-        return ExportData(grod, keys, validJson);
+        return ExportData(grod, keys, jsonFormat);
     }
 
     /// <summary>
-    /// Save only the GROD Overlay data to a string in GRIF format.
+    /// Save only the GROD Overlay data to a string in JSON or GRIF format.
     /// </summary>
-    public static string SaveOverlayDataToString(Grod grod, bool validJson = false)
+    public static string SaveOverlayDataToString(Grod grod, bool jsonFormat = false)
     {
         var keys = grod.KeysOverlay.ToList();
-        return ExportData(grod, keys, validJson);
+        return ExportData(grod, keys, jsonFormat);
     }
 
     /// <summary>
@@ -165,19 +163,19 @@ public static class DataIO
     private static readonly StringComparison OIC = StringComparison.OrdinalIgnoreCase;
     private const string DateTimeStringFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssK";
 
-    private static string ExportData(Grod grod, List<string> keys, bool validJson = false)
+    private static string ExportData(Grod grod, List<string> keys, bool jsonFormat = false)
     {
         var needsComma = false;
         keys.Sort(CompareKeys);
         StringBuilder result = new();
-        if (validJson)
+        if (jsonFormat)
         {
             result.AppendLine("{");
         }
         foreach (string key in keys)
         {
             var value = grod[key] ?? "";
-            if (validJson)
+            if (jsonFormat)
             {
                 if (needsComma)
                 {
@@ -194,7 +192,7 @@ public static class DataIO
             }
             if (value.TrimStart().StartsWith('@'))
             {
-                if (validJson)
+                if (jsonFormat)
                 {
                     result.Append(" \"");
                     value = Dags.CompressScript(value);
@@ -217,7 +215,7 @@ public static class DataIO
             }
             else if (value.TrimStart().StartsWith('['))
             {
-                if (validJson)
+                if (jsonFormat)
                 {
                     result.Append(" \"");
                     result.Append(EncodeString(value));
@@ -239,7 +237,7 @@ public static class DataIO
             }
             else
             {
-                if (validJson)
+                if (jsonFormat)
                 {
                     result.Append(" \"");
                     result.Append(EncodeString(value ?? ""));
@@ -253,7 +251,7 @@ public static class DataIO
                 }
             }
         }
-        if (validJson)
+        if (jsonFormat)
         {
             result.AppendLine();
             result.Append('}');
@@ -373,9 +371,12 @@ public static class DataIO
         {
             index++;
         }
-        while (index < data.Length && data[index] == '\t')
+        while (index < data.Length && (data[index] == '\t' || data[index] == ' '))
         {
-            index++;
+            while (index < data.Length && (data[index] == '\t' || data[index] == ' '))
+            {
+                index++;
+            }
             if (needSpace)
             {
                 value.Append(' ');
@@ -489,13 +490,13 @@ public static class DataIO
         return result.ToString();
     }
 
-    private static string HeaderComment(string path, bool validJson)
+    private static string HeaderComment(string path, bool jsonFormat)
     {
         StringBuilder result = new();
         result.Append("// ");
         result.Append(Path.GetFileName(path));
         result.Append(" - ");
-        result.Append(validJson ? "JSON format" : "GRIF format");
+        result.Append(jsonFormat ? "JSON format" : "GRIF format");
         result.Append(" - ");
         result.Append(DateTime.UtcNow.ToString(DateTimeStringFormat));
         result.AppendLine();

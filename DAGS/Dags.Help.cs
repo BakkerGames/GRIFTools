@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using System.Text;
-using static GRIFTools.DAGS.Constants;
+using static GRIFTools.DagsConstants;
 
-namespace GRIFTools.DAGS;
+namespace GRIFTools;
 
 public partial class Dags
 {
@@ -136,7 +136,7 @@ public partial class Dags
     /// </summary>
     public static string Syntax()
     {
-        return GetResourceText("DAGS.SYNTAX.md");
+        return GetResourceText("DAGS_SYNTAX.md");
     }
 
     #region Private

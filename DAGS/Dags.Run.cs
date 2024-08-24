@@ -1,7 +1,7 @@
 ﻿using System.Text;
-using static GRIFTools.DAGS.Constants;
+using static GRIFTools.DagsConstants;
 
-namespace GRIFTools.DAGS;
+namespace GRIFTools;
 
 public partial class Dags
 {

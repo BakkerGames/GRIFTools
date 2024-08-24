@@ -1,8 +1,7 @@
-﻿using GRIFTools.GROD;
-using System.Text;
-using static GRIFTools.DAGS.Constants;
+﻿using System.Text;
+using static GRIFTools.DagsConstants;
 
-namespace GRIFTools.DAGS;
+namespace GRIFTools;
 
 /// <summary>
 /// Generate a DAGS script object and assign its dictionary.
