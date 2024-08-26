@@ -359,12 +359,6 @@ public partial class Dags
                     answer = temp1 != "" && int.TryParse(temp1, out _);
                     result.Append(ConvertToBoolString(answer));
                     return;
-                case ISSCRIPT:
-                    // is the value a script (starts with '@')
-                    CheckParamCount(token, p, 1);
-                    answer = p[0].StartsWith('@');
-                    result.Append(ConvertToBoolString(answer));
-                    return;
                 case ISSCRIPTDATA:
                     // is the raw value a script (starts with '@')
                     CheckParamCount(token, p, 1);

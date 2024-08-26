@@ -59,12 +59,18 @@ public partial class Dags(Grod grod)
     /// </summary>
     public static string PrettyScript(string script, bool indent = false)
     {
+        StringBuilder result = new();
+
         if (!script.TrimStart().StartsWith('@') && !script.TrimStart().StartsWith('['))
         {
-            return script;
+            if (indent)
+            {
+                result.Append('\t');
+            }
+            result.Append(script);
+            return result.ToString();
         }
 
-        StringBuilder result = new();
         int startIndent = indent ? 1 : 0;
         int indentLevel = startIndent;
         int parens = 0;

@@ -280,7 +280,6 @@ public partial class Dags
         ISNULLDATA,
         ISNUMBER,
         ISNUMBERDATA,
-        ISSCRIPT,
         ISSCRIPTDATA,
         LE,
         LISTLENGTH,

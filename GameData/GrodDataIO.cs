@@ -161,7 +161,6 @@ public static class GrodDataIO
     #region Private
 
     private static readonly StringComparison OIC = StringComparison.OrdinalIgnoreCase;
-    private const string DateTimeStringFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssK";
 
     private static string ExportData(Grod grod, List<string> keys, bool jsonFormat = false)
     {
@@ -497,8 +496,6 @@ public static class GrodDataIO
         result.Append(Path.GetFileName(path));
         result.Append(" - ");
         result.Append(jsonFormat ? "JSON format" : "GRIF format");
-        result.Append(" - ");
-        result.Append(DateTime.UtcNow.ToString(DateTimeStringFormat));
         result.AppendLine();
         return result.ToString();
     }
