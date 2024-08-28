@@ -48,7 +48,6 @@ public static class DagsConstants
     public const string ISNULLDATA = "@isnulldata(";
     public const string ISNUMBER = "@isnumber(";
     public const string ISNUMBERDATA = "@isnumberdata(";
-    // public const string ISSCRIPT = "@isscript(";
     public const string ISSCRIPTDATA = "@isscriptdata(";
     public const string LE = "@le(";
     public const string LISTLENGTH = "@listlength(";
