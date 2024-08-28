@@ -197,7 +197,7 @@ Any functions which returns truthy or falsey values may be defined and used as "
 
 @eq(value1,value2)
 
->Checks if the two values are equal. Compares as integers if both convert to integers, otherwise compares as exact strings (ignoring case).
+>Checks if the two values are equal. Compares as integers if both convert to integers, otherwise compares as strings (ignoring case).
 
 @false(value)
 
@@ -205,11 +205,11 @@ Any functions which returns truthy or falsey values may be defined and used as "
 
 @ge(value1,value2)
 
->Checks if integer "value1" is greater than or equal to integer "value2". Error if not integers.
+>Checks if "value1" is greater than or equal to "value2". Compares as integers if both convert to integers, otherwise compares as strings (ignoring case).
 
 @gt(value1,value2)
 
->Checks if integer "value1" is greater than integer "value2". Error if not integers.
+>Checks if "value1" is greater than "value2". Compares as integers if both convert to integers, otherwise compares as strings (ignoring case).
 
 @isbool(value)
 
@@ -237,15 +237,15 @@ Any functions which returns truthy or falsey values may be defined and used as "
 
 @le(value1,value2)
 
->Checks if integer "value1" is less than or equal to integer "value2". Error if not integers.
+>Checks if "value1" is less than or equal to "value2". Compares as integers if both convert to integers, otherwise compares as strings (ignoring case).
 
 @lt(value1,value2)
 
->Checks if integer "value1" is less than integer "value2". Error if not integers.
+>Checks if "value1" is less than "value2". Compares as integers if both convert to integers, otherwise compares as strings (ignoring case).
 
 @ne(value1,value2)
 
->Checks if the two values are not equal. Compares as integers if both convert to integers, otherwise compares as exact strings (ignoring case).
+>Checks if the two values are not equal. Compares as integers if both convert to integers, otherwise compares as strings (ignoring case).
 
 @rand(value)
 
