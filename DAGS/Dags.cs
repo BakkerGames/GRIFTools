@@ -49,7 +49,8 @@ public partial class Dags(Grod grod)
         catch (Exception ex)
         {
             if (result.Length > 0) result.AppendLine();
-            result.AppendLine($"{ex.Message}{Environment.NewLine}{script}");
+            if (!ex.Message.StartsWith("Error", OIC)) result.Append("ERROR: ");
+            result.AppendLine(ex.Message);
         }
     }
 

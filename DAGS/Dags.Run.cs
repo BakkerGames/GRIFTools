@@ -14,6 +14,7 @@ public partial class Dags
             string temp1;
             string temp2;
             bool answer;
+            long numericAnswer;
             List<string> list = [];
             List<List<string>> array = [];
             var token = tokens[index++];
@@ -80,7 +81,12 @@ public partial class Dags
                     CheckParamCount(token, p, 2);
                     int1 = ConvertToInt(p[0]);
                     int2 = ConvertToInt(p[1]);
-                    result.Append(int1 + int2);
+                    numericAnswer = (long)int1 + (long)int2;
+                    if (numericAnswer > int.MaxValue || numericAnswer + 1 < -int.MaxValue)
+                    {
+                        throw new SystemException($"{ADD}{int1},{int2}): Numeric overflow");
+                    }
+                    result.Append(numericAnswer);
                     return;
                 case ADDLIST:
                     // adds a value to the end of a list
@@ -98,7 +104,12 @@ public partial class Dags
                     CheckParamCount(token, p, 2);
                     int1 = GetInt(p[0]);
                     int2 = ConvertToInt(p[1]);
-                    Set(p[0], (int1 + int2).ToString());
+                    numericAnswer = (long)int1 + (long)int2;
+                    if (numericAnswer > int.MaxValue || numericAnswer + 1 < -int.MaxValue)
+                    {
+                        throw new SystemException($"{ADDTO}[{p[0]}]{int1},{int2}): Numeric overflow");
+                    }
+                    Set(p[0], numericAnswer.ToString());
                     return;
                 case CLEARARRAY:
                     // clears the named array
@@ -134,6 +145,10 @@ public partial class Dags
                     CheckParamCount(token, p, 2);
                     int1 = ConvertToInt(p[0]);
                     int2 = ConvertToInt(p[1]);
+                    if (int2 == 0)
+                    {
+                        throw new SystemException($"{DIV}{int1},{int2}): Division by zero!");
+                    }
                     result.Append(int1 / int2);
                     return;
                 case DIVTO:
@@ -143,7 +158,7 @@ public partial class Dags
                     int2 = ConvertToInt(p[1]);
                     if (int2 == 0)
                     {
-                        throw new SystemException("Division by zero!");
+                        throw new SystemException($"{DIVTO}{p[0]}={int1},{int2}): Division by zero!");
                     }
                     Set(p[0], (int1 / int2).ToString());
                     return;
@@ -416,6 +431,10 @@ public partial class Dags
                     CheckParamCount(token, p, 2);
                     int1 = ConvertToInt(p[0]);
                     int2 = ConvertToInt(p[1]);
+                    if (int2 == 0)
+                    {
+                        throw new SystemException($"{MOD}{int1},{int2}): Mod by zero!");
+                    }
                     result.Append(int1 % int2);
                     return;
                 case MODTO:
@@ -425,7 +444,7 @@ public partial class Dags
                     int2 = ConvertToInt(p[1]);
                     if (int2 == 0)
                     {
-                        throw new SystemException("Mod by zero!");
+                        throw new SystemException($"{MODTO}{p[0]}={int1},{int2}): Mod by zero!");
                     }
                     Set(p[0], (int1 % int2).ToString());
                     return;
@@ -448,14 +467,24 @@ public partial class Dags
                     CheckParamCount(token, p, 2);
                     int1 = ConvertToInt(p[0]);
                     int2 = ConvertToInt(p[1]);
-                    result.Append(int1 * int2);
+                    numericAnswer = (long)int1 * (long)int2;
+                    if (numericAnswer > int.MaxValue || numericAnswer + 1 < -int.MaxValue)
+                    {
+                        throw new SystemException($"{MUL}{int1},{int2}): Numeric overflow");
+                    }
+                    result.Append(numericAnswer);
                     return;
                 case MULTO:
                     // multiply an existing value by a value
                     CheckParamCount(token, p, 2);
                     int1 = GetInt(p[0]);
                     int2 = ConvertToInt(p[1]);
-                    Set(p[0], (int1 * int2).ToString());
+                    numericAnswer = (long)int1 * (long)int2;
+                    if (numericAnswer > int.MaxValue || numericAnswer + 1 < -int.MaxValue)
+                    {
+                        throw new SystemException($"{MULTO}[{p[0]}]{int1},{int2}): Numeric overflow");
+                    }
+                    Set(p[0], numericAnswer.ToString());
                     return;
                 case NE:
                     // are values not equal (ignoring case)
@@ -579,7 +608,12 @@ public partial class Dags
                     CheckParamCount(token, p, 2);
                     int1 = ConvertToInt(p[0]);
                     int2 = ConvertToInt(p[1]);
-                    result.Append(int1 - int2);
+                    numericAnswer = (long)int1 - (long)int2;
+                    if (numericAnswer > int.MaxValue || numericAnswer + 1 < -int.MaxValue)
+                    {
+                        throw new SystemException($"{SUB}{int1},{int2}): Numeric overflow");
+                    }
+                    result.Append(numericAnswer);
                     return;
                 case SUBSTRING:
                     // get substring of characters, (value,start[,len])
@@ -612,7 +646,12 @@ public partial class Dags
                     CheckParamCount(token, p, 2);
                     int1 = GetInt(p[0]);
                     int2 = ConvertToInt(p[1]);
-                    Set(p[0], (int1 - int2).ToString());
+                    numericAnswer = (long)int1 - (long)int2;
+                    if (numericAnswer > int.MaxValue || numericAnswer + 1 < -int.MaxValue)
+                    {
+                        throw new SystemException($"{SUBTO}[{p[0]}]{int1},{int2}): Numeric overflow");
+                    }
+                    Set(p[0], numericAnswer.ToString());
                     return;
                 case SWAP:
                     // swap two values
@@ -699,9 +738,9 @@ public partial class Dags
             }
             throw new SystemException($"Unknown script token: {token}");
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw new SystemException($"Error in RunOneCommand: {ex.Message}{('\n' + ex.InnerException?.Message ?? "").Trim()}");
+            throw;
         }
     }
 
@@ -726,9 +765,9 @@ public partial class Dags
             index++;
             return resultList;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw new SystemException($"Error in GetParameters: {ex.Message}{('\n' + ex.InnerException?.Message ?? "").Trim()}");
+            throw;
         }
     }
 
@@ -752,9 +791,9 @@ public partial class Dags
             }
             return tokens[index++];
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw new SystemException($"Error in GetOneValue: {ex.Message}{('\n' + ex.InnerException?.Message ?? "").Trim()}");
+            throw;
         }
     }
 
@@ -830,9 +869,9 @@ public partial class Dags
             index++; // skip @then
             return answer;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw new SystemException($"Error in CheckConditions: {ex.Message}{('\n' + ex.InnerException?.Message ?? "").Trim()}");
+            throw;
         }
     }
 
@@ -886,9 +925,9 @@ public partial class Dags
                 }
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw new SystemException($"Error in SkipToElse: {ex.Message}{('\n' + ex.InnerException?.Message ?? "").Trim()}");
+            throw;
         }
     }
 
@@ -919,9 +958,9 @@ public partial class Dags
             }
             index++;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            throw new SystemException($"Error in SkipPastEndif: {ex.Message}{('\n' + ex.InnerException?.Message ?? "").Trim()}");
+            throw;
         }
     }
 
