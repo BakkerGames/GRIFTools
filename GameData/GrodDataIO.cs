@@ -246,6 +246,15 @@ public static class GrodDataIO
                 else
                 {
                     result.Append('\t');
+                    // change leading and trailing spaces to "\s"
+                    if (value.StartsWith(' '))
+                    {
+                        value = "\\s" + value[1..];
+                    }
+                    if (value.EndsWith(' '))
+                    {
+                        value = value[..^1] + "\\s";
+                    }
                     result.AppendLine(value);
                 }
             }
@@ -390,7 +399,17 @@ public static class GrodDataIO
             }
             needSpace = true;
         }
-        return (key.ToString(), value.ToString());
+        var valueTemp = value.ToString().Trim();
+        // change leading and trailing "\s" to spaces
+        if (valueTemp.StartsWith("\\s"))
+        {
+            valueTemp = ' ' + valueTemp[2..];
+        }
+        if (valueTemp.EndsWith("\\s"))
+        {
+            valueTemp = valueTemp[..^2] + ' ';
+        }
+        return (key.ToString(), valueTemp);
     }
 
     private static string GetString(string data, ref int index)
