@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using GRIFTools.GROD;
+using System.Text;
 using static GRIFTools.DagsConstants;
 
 namespace GRIFTools;
@@ -1025,7 +1026,7 @@ public partial class Dags
             newTokens.Append(token);
         } while (index < tokens.Length);
 
-        var keys = Data.Keys.Where(x => x.StartsWith(p[1]));
+        var keys = Data.Keys().Where(x => x.StartsWith(p[1]));
         foreach (string key in keys)
         {
             var value = key[p[1].Length..];
@@ -1066,16 +1067,14 @@ public partial class Dags
             }
             newTokens.Append(token);
         } while (index < tokens.Length);
-
-        var valueList = ExpandList(Data[p[1]] ?? "");
-        foreach (var value in valueList)
+        var valueList = Data.Get(p[1]);
+        if (valueList != null && valueList.Type == GrodEnums.GrodItemType.List && valueList.Value != null)
         {
-            if (value == "" || value == NULL_VALUE)
+            foreach (var value in (List<GrodItem?>)valueList.Value)
             {
-                continue;
+                var script = newTokens.ToString().Replace($"${p[0]}", value?.Value?.ToString() ?? "");
+                RunScript(script, result);
             }
-            var script = newTokens.ToString().Replace($"${p[0]}", value);
-            RunScript(script, result);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using static GRIFTools.DagsConstants;
-
-namespace GRIFTools;
+﻿namespace GRIFTools;
 
 public partial class Dags
 {
@@ -9,15 +7,7 @@ public partial class Dags
     /// </summary>
     private string Get(string key)
     {
-        if (Data.TryGetValue(key, out string? value))
-        {
-            if (value == null || value == NULL_VALUE)
-            {
-                value = "";
-            }
-            return value;
-        }
-        return "";
+        return Data.GetString(key);
     }
 
     /// <summary>
@@ -25,18 +15,7 @@ public partial class Dags
     /// </summary>
     private void Set(string key, string value)
     {
-        if (value == null || value == NULL_VALUE)
-        {
-            value = "";
-        }
-        if (Data.ContainsKey(key))
-        {
-            Data[key] = value;
-        }
-        else
-        {
-            Data.Add(key, value);
-        }
+        Data.SetString(key, value);
     }
 
     /// <summary>
@@ -44,14 +23,22 @@ public partial class Dags
     /// </summary>
     private int GetInt(string key)
     {
-        var value = Get(key);
+        var item = Data.Get(key);
+        if (item == null || item.Type == GROD.GrodEnums.GrodItemType.Null || item.Value == null)
+        {
+            return 0;
+        }
+        if (item.Type == GROD.GrodEnums.GrodItemType.Number && item.NumberType == GROD.GrodEnums.GrodNumberType.Int)
+        {
+            return (int)item.Value;
+        }
         try
         {
-            return ConvertToInt(value);
+            return ConvertToInt(item.Value.ToString() ?? "0");
         }
         catch (Exception)
         {
-            throw new SystemException($"Value is not numeric: [{key}] {value}");
+            throw new SystemException($"Value is not numeric: {key}: {item.Value}");
         }
     }
 
@@ -62,7 +49,7 @@ public partial class Dags
     {
         Dictionary<string, string?> result = [];
         List<string> keys;
-        keys = Data.Keys.Where(x => x.StartsWith(prefix, OIC)).ToList();
+        keys = Data.Keys().Where(x => x.StartsWith(prefix, OIC)).ToList();
         foreach (string k in keys)
         {
             result.Add(k, Get(k));

@@ -1,5 +1,7 @@
-﻿using System.Globalization;
+﻿using GRIFTools.GROD;
+using System.Globalization;
 using System.Text;
+using static GRIFTools.GROD.GrodEnums;
 
 namespace GRIFTools;
 
@@ -48,7 +50,7 @@ public static class GrodDataIO
                 else
                     (key, value) = GetKeyValueGRIF(data, ref index);
                 if (key != "")
-                    grod[key] = value;
+                    grod.Set(key, new GrodItem() { Type = GrodEnums.GrodItemType.String, Value = value });
             }
         }
         catch (Exception ex)
@@ -75,7 +77,7 @@ public static class GrodDataIO
         {
             Directory.CreateDirectory(dir);
         }
-        var keys = grod.Keys.ToList();
+        var keys = grod.Keys(WhichData.Both);
         File.WriteAllText(path, HeaderComment(path, jsonFormat) + ExportData(grod, keys, jsonFormat));
     }
 
@@ -97,7 +99,7 @@ public static class GrodDataIO
         {
             Directory.CreateDirectory(dir);
         }
-        var keys = grod.KeysOverlay.ToList();
+        var keys = grod.Keys(WhichData.Overlay);
         File.WriteAllText(path, HeaderComment(path, jsonFormat) + ExportData(grod, keys, jsonFormat));
     }
 
@@ -106,7 +108,7 @@ public static class GrodDataIO
     /// </summary>
     public static string SaveDataToString(Grod grod, bool jsonFormat = false)
     {
-        var keys = grod.Keys.ToList();
+        var keys = grod.Keys();
         return ExportData(grod, keys, jsonFormat);
     }
 
@@ -115,7 +117,7 @@ public static class GrodDataIO
     /// </summary>
     public static string SaveOverlayDataToString(Grod grod, bool jsonFormat = false)
     {
-        var keys = grod.KeysOverlay.ToList();
+        var keys = grod.Keys(WhichData.Overlay);
         return ExportData(grod, keys, jsonFormat);
     }
 
@@ -173,7 +175,7 @@ public static class GrodDataIO
         }
         foreach (string key in keys)
         {
-            var value = grod[key] ?? "";
+            var value = grod.GetString(key) ?? "";
             if (jsonFormat)
             {
                 if (needsComma)

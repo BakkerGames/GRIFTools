@@ -11,7 +11,7 @@ public partial class Dags
     public bool ValidateDictionary(StringBuilder result)
     {
         var ok = true;
-        foreach (string s in Data.Keys)
+        foreach (string s in Data.Keys())
         {
             if (string.IsNullOrWhiteSpace(s))
             {
@@ -20,7 +20,7 @@ public partial class Dags
             }
             else
             {
-                var value = Data[s]?.TrimStart() ?? "";
+                var value = Data.GetString(s)?.TrimStart() ?? "";
                 if (value.StartsWith('@'))
                 {
                     ok = ok && ValidateScript(value, result);
