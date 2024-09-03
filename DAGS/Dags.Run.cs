@@ -96,9 +96,9 @@ public partial class Dags
                     {
                         throw new SystemException("List name cannot be blank");
                     }
-                    list = ExpandList(Get(p[0]));
+                    list = GetList(p[0]);
                     list.Add(p[1]);
-                    Set(p[0], CollapseList(list));
+                    SetList(p[0], list);
                     return;
                 case ADDTO:
                     // add a value to an existing value
@@ -117,9 +117,9 @@ public partial class Dags
                     CheckParamCount(token, p, 1);
                     if (p[0] == "")
                     {
-                        throw new SystemException("List name cannot be blank");
+                        throw new SystemException("Array name cannot be blank");
                     }
-                    Set(p[0], "[]");
+                    SetArray(p[0], []);
                     return;
                 case CLEARLIST:
                     // clears the named list
@@ -263,7 +263,7 @@ public partial class Dags
                     {
                         throw new SystemException($"Invalid (y,x) for array: ({p[1]},{p[2]})");
                     }
-                    array = ExpandArray(Get(p[0]));
+                    array = GetArray(p[0]);
                     if (int1 < array.Count && int2 < array[int1].Count)
                     {
                         result.Append(array[int1][int2]);
@@ -280,7 +280,7 @@ public partial class Dags
                     {
                         throw new SystemException($"Invalid (x) for list: {p[1]}");
                     }
-                    list = ExpandList(Get(p[0]));
+                    list = GetList(p[0]);
                     if (int1 <= list.Count)
                     {
                         result.Append(list[int1]);
@@ -324,7 +324,7 @@ public partial class Dags
                     {
                         throw new SystemException($"Invalid (x) for list: {p[1]}");
                     }
-                    list = ExpandList(Get(p[0]));
+                    list = GetList(p[0]);
                     while (int1 > list.Count)
                     {
                         list.Add("");
@@ -333,7 +333,7 @@ public partial class Dags
                         list.Add(p[2]);
                     else
                         list.Insert(int1, p[2]);
-                    Set(p[0], CollapseList(list));
+                    SetList(p[0], list);
                     return;
                 case ISBOOL:
                     // is value true or false?
@@ -404,7 +404,7 @@ public partial class Dags
                     {
                         throw new SystemException("List name cannot be blank");
                     }
-                    list = ExpandList(Get(p[0]));
+                    list = GetList(p[0]);
                     result.Append(list.Count);
                     return;
                 case LOWER:
@@ -521,11 +521,11 @@ public partial class Dags
                     {
                         throw new SystemException($"Invalid (x) for list: {p[1]}");
                     }
-                    list = ExpandList(Get(p[0]));
+                    list = GetList(p[0]);
                     if (int1 < list.Count)
                     {
                         list.RemoveAt(int1);
-                        Set(p[0], CollapseList(list));
+                        SetList(p[0], list);
                     }
                     return;
                 case REPLACE:
@@ -568,7 +568,7 @@ public partial class Dags
                     {
                         throw new SystemException($"Invalid (y,x) for array: ({p[1]},{p[2]})");
                     }
-                    array = ExpandArray(Get(p[0]));
+                    array = GetArray(p[0]);
                     while (int1 >= array.Count)
                     {
                         array.Add([]);
@@ -578,7 +578,7 @@ public partial class Dags
                         array[int1].Add("");
                     }
                     array[int1][int2] = p[3];
-                    Set(p[0], CollapseArray(array));
+                    SetArray(p[0], array);
                     return;
                 case SETLIST:
                     // set a name,x,value
@@ -591,13 +591,13 @@ public partial class Dags
                     {
                         throw new SystemException($"Invalid (x) for list: {p[1]}");
                     }
-                    list = ExpandList(Get(p[0]));
+                    list = GetList(p[0]);
                     while (int1 >= list.Count)
                     {
                         list.Add("");
                     }
                     list[int1] = p[2];
-                    Set(p[0], CollapseList(list));
+                    SetList(p[0], list);
                     return;
                 case SETOUTCHANNEL:
                     // adds the value to the OutChannel queue

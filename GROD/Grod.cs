@@ -71,15 +71,53 @@ public class Grod
 
     public List<string> Keys(WhichData whichData = WhichData.Both)
     {
-        if (whichData == WhichData.Base)
+        if (!UseOverlay || whichData == WhichData.Base)
         {
             return _base.Keys.ToList();
         }
-        if (whichData == WhichData.Overlay)
+        if (UseOverlay && whichData == WhichData.Overlay)
         {
             return _overlay.Keys.ToList();
         }
         return _base.Keys.Union(_overlay.Keys).ToList();
+    }
+
+    public int Count(WhichData whichData = WhichData.Both)
+    {
+        return Keys(whichData).Count;
+    }
+
+    public bool ContainsKey(string key)
+    {
+        key = NormalizeKey(key);
+        if (_base.ContainsKey(key))
+        {
+            return true;
+        }
+        if (UseOverlay && _overlay.ContainsKey(key))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void Remove(string key)
+    {
+        key = NormalizeKey(key);
+        _base.Remove(key);
+        if (UseOverlay)
+        {
+            _overlay.Remove(key);
+        }
+    }
+
+    public void Revert(string key)
+    {
+        key = NormalizeKey(key);
+        if (UseOverlay)
+        {
+            _overlay[key] = _base[key];
+        }
     }
 
     public void MergeOverlay()
@@ -112,6 +150,7 @@ public class Grod
             if (c >= 'a' && c <= 'z') continue;
             if (c >= '0' && c <= '9') continue;
             if (c == '_' || c == '.') continue;
+            if (c == '@' || c == '(' || c == ')' || c == ',') continue;
             throw new ArgumentException("Invalid key");
         }
         return key;
