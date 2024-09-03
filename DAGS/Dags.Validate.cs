@@ -297,6 +297,7 @@ public partial class Dags
         RAND,
         REMOVEATLIST,
         REPLACE,
+        RETURN,
         RND,
         SCRIPT,
         SET,

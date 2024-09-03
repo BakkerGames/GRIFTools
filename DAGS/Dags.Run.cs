@@ -51,6 +51,10 @@ public partial class Dags
                     case NL:
                         result.Append(@"\n");
                         return;
+                    case RETURN:
+                        // immediately jump to end of script
+                        index = tokens.Length;
+                        return;
                     default:
                         // run a defined function with no parameters
                         // @func=...
@@ -96,9 +100,9 @@ public partial class Dags
                     {
                         throw new SystemException("List name cannot be blank");
                     }
-                    list = GetList(p[0]);
+                    list = GetEntireList(p[0]);
                     list.Add(p[1]);
-                    SetList(p[0], list);
+                    SetEntireList(p[0], list);
                     return;
                 case ADDTO:
                     // add a value to an existing value
@@ -280,11 +284,7 @@ public partial class Dags
                     {
                         throw new SystemException($"Invalid (x) for list: {p[1]}");
                     }
-                    list = GetList(p[0]);
-                    if (int1 <= list.Count)
-                    {
-                        result.Append(list[int1]);
-                    }
+                    result.Append(GetListItem(p[0], p[1]));
                     return;
                 case GETVALUE:
                     // get a value with script processing
@@ -324,16 +324,20 @@ public partial class Dags
                     {
                         throw new SystemException($"Invalid (x) for list: {p[1]}");
                     }
-                    list = GetList(p[0]);
+                    list = GetEntireList(p[0]);
                     while (int1 > list.Count)
                     {
                         list.Add("");
                     }
                     if (int1 == list.Count)
+                    {
                         list.Add(p[2]);
+                    }
                     else
+                    {
                         list.Insert(int1, p[2]);
-                    SetList(p[0], list);
+                    }
+                    SetEntireList(p[0], list);
                     return;
                 case ISBOOL:
                     // is value true or false?
@@ -404,7 +408,7 @@ public partial class Dags
                     {
                         throw new SystemException("List name cannot be blank");
                     }
-                    list = GetList(p[0]);
+                    list = GetEntireList(p[0]);
                     result.Append(list.Count);
                     return;
                 case LOWER:
@@ -521,11 +525,11 @@ public partial class Dags
                     {
                         throw new SystemException($"Invalid (x) for list: {p[1]}");
                     }
-                    list = GetList(p[0]);
+                    list = GetEntireList(p[0]);
                     if (int1 < list.Count)
                     {
                         list.RemoveAt(int1);
-                        SetList(p[0], list);
+                        SetEntireList(p[0], list);
                     }
                     return;
                 case REPLACE:
@@ -591,13 +595,7 @@ public partial class Dags
                     {
                         throw new SystemException($"Invalid (x) for list: {p[1]}");
                     }
-                    list = GetList(p[0]);
-                    while (int1 >= list.Count)
-                    {
-                        list.Add("");
-                    }
-                    list[int1] = p[2];
-                    SetList(p[0], list);
+                    SetListItem(p[0], p[1], p[2]);
                     return;
                 case SETOUTCHANNEL:
                     // adds the value to the OutChannel queue

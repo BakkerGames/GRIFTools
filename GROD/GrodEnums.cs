@@ -14,7 +14,6 @@ public static class GrodEnums
 
     public enum GrodNumberType
     {
-        Null = 0,
         Int = 1,
         Long = 2,
         Float = 3,

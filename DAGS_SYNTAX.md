@@ -139,6 +139,10 @@ false
 
 >Returns "value" with all occurances of "old" changed to "new".
 
+@return
+
+>Immediately exit the current script.
+
 @rnd(value)
 
 >Returns a random integer from 0 to "value" minus 1.

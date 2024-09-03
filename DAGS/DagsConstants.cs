@@ -65,6 +65,7 @@ public static class DagsConstants
     public const string RAND = "@rand(";
     public const string REMOVEATLIST = "@removeatlist(";
     public const string REPLACE = "@replace(";
+    public const string RETURN = "@return";
     public const string RND = "@rnd(";
     public const string SCRIPT = "@script(";
     public const string SET = "@set(";

@@ -73,7 +73,7 @@ public partial class Dags
     /// <summary>
     /// Get a list of strings.
     /// </summary>
-    private List<string> GetList(string key)
+    private List<string> GetEntireList(string key)
     {
         var itemList = Data.Get(key);
         if (itemList == null || itemList.Type == GrodItemType.Null)
@@ -96,7 +96,53 @@ public partial class Dags
         return result;
     }
 
-    private void SetList(string key, List<string> itemList)
+    /// <summary>
+    /// Get an item from a list of strings.
+    /// </summary>
+    private string GetListItem(string key, string index)
+    {
+        if (!int.TryParse(index, out int tempIndex))
+        {
+            throw new ArgumentException($"Value is not an integer: {index}");
+        }
+        return GetListItem(key, tempIndex);
+    }
+
+    /// <summary>
+    /// Get an item from a list of strings.
+    /// </summary>
+    private string GetListItem(string key, int index)
+    {
+        var item = Data.Get(key);
+        if (item == null || item.Type == GrodItemType.Null || item.Value == null)
+        {
+            return "";
+        }
+        if (item.Type != GrodItemType.List)
+        {
+            throw new ArgumentException($"Item is not a list: {key}");
+        }
+        var itemList = (List<GrodItem>)item.Value;
+        if (itemList == null || itemList.Count <= index)
+        {
+            return "";
+        }
+        var indexItem = (GrodItem?)itemList[index];
+        if (indexItem == null || indexItem.Type == GrodItemType.Null) 
+        {
+            return "";
+        }
+        if (indexItem.Type != GrodItemType.String)
+        {
+            throw new ArgumentException($"Item is not a string: {key}[{index}]");
+        }
+        return (string?)indexItem.Value ?? "";
+    }
+
+    /// <summary>
+    /// Sets Data[key] to a list of strings.
+    /// </summary>
+    private void SetEntireList(string key, List<string> itemList)
     {
         List<GrodItem> grodItems = [];
         foreach (string s in itemList)
@@ -109,6 +155,36 @@ public partial class Dags
             Value = grodItems
         };
         Data.Set(key, item);
+    }
+
+    private void SetListItem(string key, string index, string value)
+    {
+        if (!int.TryParse(index, out int tempIndex))
+        {
+            throw new ArgumentException($"Value is not an integer: {index}");
+        }
+        SetListItem(key, tempIndex, value);
+    }
+
+    private void SetListItem(string key, int index, string value)
+    {
+        var item = Data.Get(key);
+        if (item == null || item.Type == GrodItemType.Null)
+        {
+            item = new GrodItem() { Type = GrodItemType.List, Value = new List<GrodItem>() };
+            Data.Set(key, item);
+        }
+        if (item.Type != GrodItemType.List)
+        {
+            throw new ArgumentException($"Item is not a list: {key}");
+        }
+        item.Value ??= new List<GrodItem>();
+        var itemList = (List<GrodItem>)item.Value;
+        while (itemList.Count <= index)
+        {
+            itemList.Add(new GrodItem() { Type = GrodItemType.String, Value = "" });
+        }
+        itemList[index] = new GrodItem() { Type = GrodItemType.String, Value = value };
     }
 
     private List<List<string>> GetArray(string key)

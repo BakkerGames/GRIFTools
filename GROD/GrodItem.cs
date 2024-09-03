@@ -11,56 +11,78 @@ public class GrodItem
 
     public override string ToString()
     {
-        StringBuilder result;
-        if (Value == null)
-            return "null";
-        switch (Type)
+        StringBuilder result = new();
+        result.Append('{');
+        result.Append($"Type: {Type}, ");
+        if (Type == GrodItemType.Number)
         {
-            case GrodItemType.Null:
-                return "null";
-            case GrodItemType.Bool:
-                return (bool)Value ? "true" : "false"; 
-            case GrodItemType.String:
-                return '"' + (string)Value + '"';
-            case GrodItemType.Number:
-                return NumberType switch
-                {
-                    GrodNumberType.Int => ((int)Value).ToString(),
-                    GrodNumberType.Long => ((long)Value).ToString(),
-                    GrodNumberType.Float => ((float)Value).ToString(),
-                    GrodNumberType.Decimal => ((decimal)Value).ToString(),
-                    _ => "0",
-                };
-            case GrodItemType.List:
-                result = new();
-                result.Append('[');
-                var itemList = (List<GrodItem>)Value;
-                for (int i = 0; i < itemList.Count; i++)
-                {
-                    if (i > 0) result.Append(',');
-                    result.Append(itemList[i].ToString());
-                }
-                result.Append(']');
-                return result.ToString();
-            case GrodItemType.Obj:
-                result = new();
-                result.Append('{');
-                var itemObj = (Dictionary<string, GrodItem?>)Value;
-                bool comma = false;
-                foreach (string objKey in itemObj.Keys)
-                {
-                    if (comma)
-                        result.Append(',');
-                    else
-                        comma = true;
-                    result.Append('"');
-                    result.Append(objKey);
-                    result.Append("\":");
-                    result.Append(itemObj[objKey]?.ToString() ?? "null");
-                }
-                result.Append('}');
-                return result.ToString();
+            result.Append($"NumberType: {NumberType}, ");
         }
-        return "";
+        result.Append("Value: ");
+        if (Value == null)
+        {
+            result.Append("null");
+        }
+        else
+        {
+            switch (Type)
+            {
+                case GrodItemType.Null:
+                    result.Append("null");
+                    break;
+                case GrodItemType.Bool:
+                    result.Append((bool)Value ? "true" : "false");
+                    break;
+                case GrodItemType.String:
+                    result.Append('"' + (string)Value + '"');
+                    break;
+                case GrodItemType.Number:
+                    switch (NumberType)
+                    {
+                        case GrodNumberType.Int:
+                            result.Append((int)Value);
+                            break;
+                        case GrodNumberType.Long:
+                            result.Append((long)Value);
+                            break;
+                        case GrodNumberType.Float:
+                            result.Append((float)Value);
+                            break;
+                        case GrodNumberType.Decimal:
+                            result.Append((decimal)Value);
+                            break;
+                    };
+                    break;
+                case GrodItemType.List:
+                    result.Append('[');
+                    var itemList = (List<GrodItem>)Value;
+                    for (int i = 0; i < itemList.Count; i++)
+                    {
+                        if (i > 0) result.Append(',');
+                        result.Append(itemList[i].ToString());
+                    }
+                    result.Append(']');
+                    break;
+                case GrodItemType.Obj:
+                    result.Append('{');
+                    var itemObj = (Dictionary<string, GrodItem?>)Value;
+                    bool comma = false;
+                    foreach (string objKey in itemObj.Keys)
+                    {
+                        if (comma)
+                            result.Append(',');
+                        else
+                            comma = true;
+                        result.Append('"');
+                        result.Append(objKey);
+                        result.Append("\":");
+                        result.Append(itemObj[objKey]?.ToString() ?? "null");
+                    }
+                    result.Append('}');
+                    break;
+            }
+        }
+        result.Append('}');
+        return result.ToString();
     }
 }
