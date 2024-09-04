@@ -1,7 +1,6 @@
-﻿using GRIFTools.GROD;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
-using static GRIFTools.GROD.GrodEnums;
+using static GRIFTools.GrodEnums;
 
 namespace GRIFTools;
 
@@ -46,11 +45,24 @@ public static class GrodDataIO
                 string key;
                 string value;
                 if (jsonFormat)
+                {
                     (key, value) = GetKeyValueJson(data, ref index);
+                }
                 else
+                {
                     (key, value) = GetKeyValueGRIF(data, ref index);
+                }
                 if (key != "")
-                    grod.Set(key, new GrodItem() { Type = GrodEnums.GrodItemType.String, Value = value });
+                {
+                    if (value.StartsWith('['))
+                    {
+                        grod.Set(key, new GrodItem() { Type = GrodItemType.List, Value = Grod.StringToList(value) });
+                    }
+                    else
+                    {
+                        grod.Set(key, new GrodItem() { Type = GrodItemType.String, Value = value });
+                    }
+                }
             }
         }
         catch (Exception ex)

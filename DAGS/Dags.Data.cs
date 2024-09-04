@@ -1,6 +1,6 @@
-﻿using GRIFTools.GROD;
+﻿using GRIFTools;
 using static GRIFTools.DagsConstants;
-using static GRIFTools.GROD.GrodEnums;
+using static GRIFTools.GrodEnums;
 
 namespace GRIFTools;
 
@@ -37,7 +37,7 @@ public partial class Dags
     private int GetInt(string key)
     {
         var item = Data.Get(key);
-        if (item == null || item.Type == GrodItemType.Null || item.Value == null)
+        if (item == null || item.Value == null)
         {
             return 0;
         }
@@ -73,23 +73,15 @@ public partial class Dags
     /// <summary>
     /// Get a list of strings.
     /// </summary>
-    private List<string> GetEntireList(string key)
+    private List<string> GetList(string key)
     {
-        var itemList = Data.Get(key);
-        if (itemList == null || itemList.Type == GrodItemType.Null)
-        {
-            return [];
-        }
-        if (itemList.Type != GrodItemType.List)
-        {
-            throw new ArgumentException($"Item is not a list: {key}");
-        }
-        if (itemList.Value == null)
+        var itemList = Data.GetList(key);
+        if (itemList == null)
         {
             return [];
         }
         List<string> result = [];
-        foreach (GrodItem g in (List<GrodItem>)itemList.Value)
+        foreach (GrodItem g in itemList)
         {
             result.Add(g?.Value?.ToString() ?? "");
         }
@@ -114,7 +106,7 @@ public partial class Dags
     private string GetListItem(string key, int index)
     {
         var item = Data.Get(key);
-        if (item == null || item.Type == GrodItemType.Null || item.Value == null)
+        if (item == null || item.Value == null)
         {
             return "";
         }
@@ -128,7 +120,7 @@ public partial class Dags
             return "";
         }
         var indexItem = (GrodItem?)itemList[index];
-        if (indexItem == null || indexItem.Type == GrodItemType.Null) 
+        if (indexItem == null)
         {
             return "";
         }
@@ -142,21 +134,19 @@ public partial class Dags
     /// <summary>
     /// Sets Data[key] to a list of strings.
     /// </summary>
-    private void SetEntireList(string key, List<string> itemList)
+    private void SetList(string key, List<string>? itemList)
     {
         List<GrodItem> grodItems = [];
-        foreach (string s in itemList)
+        foreach (string s in itemList ?? [])
         {
             grodItems.Add(new GrodItem() { Type = GrodItemType.String, Value = s });
         }
-        GrodItem item = new()
-        {
-            Type = GrodItemType.List,
-            Value = grodItems
-        };
-        Data.Set(key, item);
+        Data.SetList(key, grodItems);
     }
 
+    /// <summary>
+    /// Sets an item in a list to a value.
+    /// </summary>
     private void SetListItem(string key, string index, string value)
     {
         if (!int.TryParse(index, out int tempIndex))
@@ -166,31 +156,31 @@ public partial class Dags
         SetListItem(key, tempIndex, value);
     }
 
+    /// <summary>
+    /// Sets an item in a list to a value.
+    /// </summary>
     private void SetListItem(string key, int index, string value)
     {
-        var item = Data.Get(key);
-        if (item == null || item.Type == GrodItemType.Null)
-        {
-            item = new GrodItem() { Type = GrodItemType.List, Value = new List<GrodItem>() };
-            Data.Set(key, item);
-        }
-        if (item.Type != GrodItemType.List)
-        {
-            throw new ArgumentException($"Item is not a list: {key}");
-        }
-        item.Value ??= new List<GrodItem>();
-        var itemList = (List<GrodItem>)item.Value;
+        var itemList = Data.GetList(key) ?? [];
         while (itemList.Count <= index)
         {
             itemList.Add(new GrodItem() { Type = GrodItemType.String, Value = "" });
         }
-        itemList[index] = new GrodItem() { Type = GrodItemType.String, Value = value };
+        if (itemList[index] != null && itemList[index].Type == GrodItemType.String)
+        {
+            itemList[index].Value = value;
+        }
+        else
+        {
+            itemList[index] = new GrodItem() { Type = GrodItemType.String, Value = value };
+        }
+        Data.SetList(key, itemList);
     }
 
     private List<List<string>> GetArray(string key)
     {
         var array = Data.Get(key);
-        if (array == null || array.Type == GrodItemType.Null)
+        if (array == null)
         {
             return [];
         }
@@ -206,7 +196,7 @@ public partial class Dags
         foreach (GrodItem gRow in (List<GrodItem>)array.Value)
         {
             List<string> row = [];
-            if (gRow != null && gRow.Type != GrodItemType.Null && gRow.Value != null)
+            if (gRow != null && gRow.Value != null)
             {
                 if (gRow.Type != GrodItemType.List)
                 {

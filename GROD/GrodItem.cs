@@ -1,7 +1,7 @@
 ﻿using System.Text;
-using static GRIFTools.GROD.GrodEnums;
+using static GRIFTools.GrodEnums;
 
-namespace GRIFTools.GROD;
+namespace GRIFTools;
 
 public class GrodItem
 {
@@ -12,13 +12,15 @@ public class GrodItem
     public override string ToString()
     {
         StringBuilder result = new();
-        result.Append('{');
-        result.Append($"Type: {Type}, ");
+        result.Append('<');
         if (Type == GrodItemType.Number)
         {
-            result.Append($"NumberType: {NumberType}, ");
+            result.Append($"{NumberType}: ");
         }
-        result.Append("Value: ");
+        else
+        {
+            result.Append($"{Type}: ");
+        }
         if (Value == null)
         {
             result.Append("null");
@@ -27,9 +29,6 @@ public class GrodItem
         {
             switch (Type)
             {
-                case GrodItemType.Null:
-                    result.Append("null");
-                    break;
                 case GrodItemType.Bool:
                     result.Append((bool)Value ? "true" : "false");
                     break;
@@ -82,7 +81,7 @@ public class GrodItem
                     break;
             }
         }
-        result.Append('}');
+        result.Append('>');
         return result.ToString();
     }
 }

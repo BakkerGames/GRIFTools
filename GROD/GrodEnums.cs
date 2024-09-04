@@ -1,10 +1,9 @@
-﻿namespace GRIFTools.GROD;
+﻿namespace GRIFTools;
 
 public static class GrodEnums
 {
     public enum GrodItemType
     {
-        Null = 0,
         Bool = 1,
         String = 2,
         Number = 3,

@@ -1,6 +1,6 @@
-﻿using GRIFTools.GROD;
-using System.Text;
+﻿using System.Text;
 using static GRIFTools.DagsConstants;
+using static GRIFTools.GrodEnums;
 
 namespace GRIFTools;
 
@@ -100,9 +100,9 @@ public partial class Dags
                     {
                         throw new SystemException("List name cannot be blank");
                     }
-                    list = GetEntireList(p[0]);
+                    list = GetList(p[0]);
                     list.Add(p[1]);
-                    SetEntireList(p[0], list);
+                    SetList(p[0], list);
                     return;
                 case ADDTO:
                     // add a value to an existing value
@@ -132,7 +132,7 @@ public partial class Dags
                     {
                         throw new SystemException("List name cannot be blank");
                     }
-                    Set(p[0], "[]");
+                    SetList(p[0], null);
                     return;
                 case COMMENT:
                     // comment for script documentation
@@ -324,7 +324,7 @@ public partial class Dags
                     {
                         throw new SystemException($"Invalid (x) for list: {p[1]}");
                     }
-                    list = GetEntireList(p[0]);
+                    list = GetList(p[0]);
                     while (int1 > list.Count)
                     {
                         list.Add("");
@@ -337,7 +337,7 @@ public partial class Dags
                     {
                         list.Insert(int1, p[2]);
                     }
-                    SetEntireList(p[0], list);
+                    SetList(p[0], list);
                     return;
                 case ISBOOL:
                     // is value true or false?
@@ -408,7 +408,7 @@ public partial class Dags
                     {
                         throw new SystemException("List name cannot be blank");
                     }
-                    list = GetEntireList(p[0]);
+                    list = GetList(p[0]);
                     result.Append(list.Count);
                     return;
                 case LOWER:
@@ -525,11 +525,11 @@ public partial class Dags
                     {
                         throw new SystemException($"Invalid (x) for list: {p[1]}");
                     }
-                    list = GetEntireList(p[0]);
+                    list = GetList(p[0]);
                     if (int1 < list.Count)
                     {
                         list.RemoveAt(int1);
-                        SetEntireList(p[0], list);
+                        SetList(p[0], list);
                     }
                     return;
                 case REPLACE:
@@ -1066,7 +1066,7 @@ public partial class Dags
             newTokens.Append(token);
         } while (index < tokens.Length);
         var valueList = Data.Get(p[1]);
-        if (valueList != null && valueList.Type == GrodEnums.GrodItemType.List && valueList.Value != null)
+        if (valueList != null && valueList.Type == GrodItemType.List && valueList.Value != null)
         {
             foreach (var value in (List<GrodItem?>)valueList.Value)
             {

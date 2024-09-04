@@ -1,5 +1,4 @@
-﻿using GRIFTools.GROD;
-using System.Text;
+﻿using System.Text;
 using static GRIFTools.DagsConstants;
 
 namespace GRIFTools;
