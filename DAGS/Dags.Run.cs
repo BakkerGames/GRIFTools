@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using static GRIFTools.DagsConstants;
-using static GRIFTools.GrodEnums;
 
 namespace GRIFTools;
 
@@ -267,11 +266,7 @@ public partial class Dags
                     {
                         throw new SystemException($"Invalid (y,x) for array: ({p[1]},{p[2]})");
                     }
-                    array = GetArray(p[0]);
-                    if (int1 < array.Count && int2 < array[int1].Count)
-                    {
-                        result.Append(array[int1][int2]);
-                    }
+                    result.Append(GetArrayItem(p[0], int1, int2));
                     return;
                 case GETLIST:
                     // get a name,x value
@@ -572,17 +567,7 @@ public partial class Dags
                     {
                         throw new SystemException($"Invalid (y,x) for array: ({p[1]},{p[2]})");
                     }
-                    array = GetArray(p[0]);
-                    while (int1 >= array.Count)
-                    {
-                        array.Add([]);
-                    }
-                    while (int2 >= array[int1].Count)
-                    {
-                        array[int1].Add("");
-                    }
-                    array[int1][int2] = p[3];
-                    SetArray(p[0], array);
+                    SetArrayItem(p[0], int1, int2, p[3]);
                     return;
                 case SETLIST:
                     // set a name,x,value
@@ -1066,11 +1051,15 @@ public partial class Dags
             newTokens.Append(token);
         } while (index < tokens.Length);
         var valueList = Data.Get(p[1]);
-        if (valueList != null && valueList.Type == GrodItemType.List && valueList.Value != null)
+        if (valueList == null || valueList.GetType() != typeof(List<string>))
         {
-            foreach (var value in (List<GrodItem?>)valueList.Value)
+            throw new ArgumentException($"Value is not a list: Key = {p[1]}");
+        }
+        foreach (var value in (List<string>)valueList)
+        {
+            if (!string.IsNullOrEmpty(value))
             {
-                var script = newTokens.ToString().Replace($"${p[0]}", value?.Value?.ToString() ?? "");
+                var script = newTokens.ToString().Replace($"${p[0]}", value);
                 RunScript(script, result);
             }
         }

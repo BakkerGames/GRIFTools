@@ -56,11 +56,11 @@ public static class GrodDataIO
                 {
                     if (value.StartsWith('['))
                     {
-                        grod.Set(key, new GrodItem() { Type = GrodItemType.List, Value = Grod.StringToList(value) });
+                        grod.Set(key, StringToList(value));
                     }
                     else
                     {
-                        grod.Set(key, new GrodItem() { Type = GrodItemType.String, Value = value });
+                        grod.Set(key, value);
                     }
                 }
             }
@@ -69,6 +69,11 @@ public static class GrodDataIO
         {
             throw new SystemException("Error loading data: " + ex.Message);
         }
+    }
+
+    private static List<string> StringToList(string value)
+    {
+        throw new NotImplementedException();
     }
 
     /// <summary>
