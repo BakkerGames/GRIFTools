@@ -1,4 +1,6 @@
-﻿using static GRIFTools.DagsConstants;
+﻿using System;
+using System.Reflection;
+using static GRIFTools.DagsConstants;
 
 namespace GRIFTools;
 
@@ -58,23 +60,6 @@ public partial class Dags
     }
 
     /// <summary>
-    /// Get a list of strings.
-    /// </summary>
-    private List<string> GetList(string key)
-    {
-        var itemList = Data.Get(key);
-        if (itemList == null)
-        {
-            return [];
-        }
-        if (itemList.GetType() != typeof(List<string>))
-        {
-            throw new SystemException($"Value is not a list: {key}");
-        }
-        return (List<string>)itemList;
-    }
-
-    /// <summary>
     /// Get an item from a list of strings.
     /// </summary>
     private string GetListItem(string key, string index)
@@ -91,25 +76,8 @@ public partial class Dags
     /// </summary>
     private string GetListItem(string key, int index)
     {
-        var itemList = GetList(key);
-        if (index >= itemList.Count)
-        {
-            return "";
-        }
-        var value = itemList[index];
-        if (value == null || value == NULL_VALUE)
-        {
-            return "";
-        }
-        return value;
-    }
-
-    /// <summary>
-    /// Sets Data[key] to a list of strings.
-    /// </summary>
-    private void SetList(string key, List<string>? itemList)
-    {
-        Data.Set(key, itemList);
+        var itemKey = $"{key}.{index}";
+        return Data.Get(itemKey);
     }
 
     /// <summary>
@@ -127,55 +95,40 @@ public partial class Dags
     /// <summary>
     /// Sets an item in a list to a value.
     /// </summary>
-    private void SetListItem(string key, int index, string value)
+    private void SetListItem(string key, int index, string? value)
     {
-        var itemList = GetList(key) ?? [];
-        while (itemList.Count <= index)
+        if (index < 0)
         {
-            itemList.Add("");
+            throw new SystemException($"List index cannot be negative: {key}: {index}");
         }
-        itemList[index] = value;
-        SetList(key, itemList);
+        var maxKey = $"{key}.max";
+        var max = Data.Get(maxKey);
+        if (max == "" || !int.TryParse(max, out int maxValue) || maxValue < index)
+        {
+            Data.Set(maxKey, index.ToString());
+        }
+        var itemKey = $"{key}.{index}";
+        Data.Set(itemKey, value);
     }
 
-    /// <summary>
-    /// Returns a 2-D array of strings.
-    /// </summary>
-    private List<List<string>> GetArray(string key)
+    private void AddListItem(string key, string? value)
     {
-        var itemArray = Data.Get(key);
-        if (itemArray == null)
+        var maxKey = $"{key}.max";
+        var max = Data.Get(maxKey);
+        var index = 0;
+        if (max != "" && int.TryParse(max, out int maxValue))
         {
-            return [];
+            index = maxValue + 1;
         }
-        if (itemArray.GetType() != typeof(List<List<string>>))
-        {
-            throw new SystemException($"Value is not an array: Key = {key}");
-        }
-        return (List<List<string>>)itemArray;
+        Data.Set(maxKey, index.ToString());
+        var itemKey = $"{key}.{index}";
+        Data.Set(itemKey, value);
     }
 
     private string GetArrayItem(string key, int y, int x)
     {
-        var array = GetArray(key);
-        if (array.Count <= y || array[y].Count <= x)
-        {
-            return "";
-        }
-        var value = array[y][x];
-        if (value == null || value == NULL_VALUE)
-        {
-            return "";
-        }
-        return value;
-    }
-
-    /// <summary>
-    /// Sets Data[key] to a 2-D array of strings.
-    /// </summary>
-    private void SetArray(string key, List<List<string>>? array)
-    {
-        Data.Set(key, array);
+        var itemKey = $"{key}.{y}.{x}";
+        return Data.Get(itemKey);
     }
 
     /// <summary>
@@ -183,16 +136,23 @@ public partial class Dags
     /// </summary>
     private void SetArrayItem(string key, int y, int x, string value)
     {
-        var array = GetArray(key);
-        while (array.Count <= y)
+        if (y < 0 || x < 0)
         {
-            array.Add([]);
+            throw new SystemException($"Array indexes cannot be negative: {key}: {y},{x}");
         }
-        while (array[y].Count <= x)
+        var yMaxKey = $"{key}.y.max";
+        var yMax = Data.Get(yMaxKey);
+        if (yMax == "" || !int.TryParse(yMax, out int yMaxValue) || yMaxValue < y)
         {
-            array[y].Add("");
+            Data.Set(yMaxKey, y.ToString());
         }
-        array[y][x] = value;
-        SetArray(key, array);
+        var xMaxKey = $"{key}.x.max";
+        var xMax = Data.Get(xMaxKey);
+        if (xMax == "" || !int.TryParse(xMax, out int xMaxValue) || xMaxValue < x)
+        {
+            Data.Set(xMaxKey, x.ToString());
+        }
+        var itemKey = $"{key}.{y}.{x}";
+        Data.Set(itemKey, value);
     }
 }

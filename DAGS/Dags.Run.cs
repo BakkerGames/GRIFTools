@@ -99,9 +99,7 @@ public partial class Dags
                     {
                         throw new SystemException("List name cannot be blank");
                     }
-                    list = GetList(p[0]);
-                    list.Add(p[1]);
-                    SetList(p[0], list);
+                    AddListItem(p[0], p[1]);
                     return;
                 case ADDTO:
                     // add a value to an existing value
