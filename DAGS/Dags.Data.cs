@@ -9,7 +9,7 @@ public partial class Dags
     /// </summary>
     private string Get(string key)
     {
-        var result = Data.GetString(key);
+        var result = Data.Get(key);
         if (result == NULL_VALUE)
         {
             result = "";
@@ -26,7 +26,7 @@ public partial class Dags
         {
             value = "";
         }
-        Data.SetString(key, value);
+        Data.Set(key, value);
     }
 
     /// <summary>
@@ -34,7 +34,12 @@ public partial class Dags
     /// </summary>
     private int GetInt(string key)
     {
-        return Data.GetInt(key);
+        var value = Data.Get(key);
+        if (int.TryParse(value, out int result))
+        {
+            return result;
+        }
+        throw new SystemException($"Value is not an int: {key}: {value}");
     }
 
     /// <summary>

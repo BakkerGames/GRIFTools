@@ -20,7 +20,7 @@ public partial class Dags
             }
             else
             {
-                var value = Data.GetString(s)?.TrimStart() ?? "";
+                var value = Data.Get(s)?.TrimStart() ?? "";
                 if (value.StartsWith('@'))
                 {
                     ok = ok && ValidateScript(value, result);

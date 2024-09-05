@@ -6,34 +6,34 @@ public partial class Grod
 {
     public bool UseOverlay { get; set; } = false;
 
-    public object? Get(string key)
+    public string Get(string key)
     {
         key = NormalizeKey(key);
-        object? item;
+        string? item;
         if (UseOverlay && _overlay.TryGetValue(key, out item))
         {
-            return item;
+            return item ?? "";
         }
         if (_base.TryGetValue(key, out item))
         {
-            return item;
+            return item ?? "";
         }
-        return null;
+        return "";
     }
 
-    public void Set(string key, object? item)
+    public void Set(string key, string? item)
     {
         key = NormalizeKey(key);
         if (UseOverlay)
         {
-            if (!_overlay.TryAdd(key, item))
+            if (!_overlay.TryAdd(key, item ?? ""))
             {
-                _overlay[key] = item;
+                _overlay[key] = item ?? "";
             }
         }
-        else if (!_base.TryAdd(key, item))
+        else if (!_base.TryAdd(key, item ?? ""))
         {
-            _base[key] = item;
+            _base[key] = item ?? "";
         }
     }
 
