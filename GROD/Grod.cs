@@ -4,8 +4,14 @@ namespace GRIFTools;
 
 public partial class Grod
 {
+    /// <summary>
+    /// Indicates if the overlay is used for storing data.
+    /// </summary>
     public bool UseOverlay { get; set; } = false;
 
+    /// <summary>
+    /// Gets a single value, or "" if not found.
+    /// </summary>
     public string Get(string key)
     {
         key = NormalizeKey(key);
@@ -21,6 +27,9 @@ public partial class Grod
         return "";
     }
 
+    /// <summary>
+    /// Saves a single value into the proper dictionary.
+    /// </summary>
     public void Set(string key, string? item)
     {
         key = NormalizeKey(key);
@@ -37,6 +46,9 @@ public partial class Grod
         }
     }
 
+    /// <summary>
+    /// Clears the specified dictionary(s).
+    /// </summary>
     public void Clear(WhichData which = WhichData.Both)
     {
         if (which == WhichData.Both || which == WhichData.Base)
@@ -49,25 +61,34 @@ public partial class Grod
         }
     }
 
+    /// <summary>
+    /// Returns a list of keys from the proper dictionary(s).
+    /// </summary>
     public List<string> Keys(WhichData which = WhichData.Both)
     {
-        if (!UseOverlay || which == WhichData.Base)
-        {
-            return _base.Keys.ToList();
-        }
         if (UseOverlay && which == WhichData.Overlay)
         {
             return _overlay.Keys.ToList();
         }
+        if (!UseOverlay || which == WhichData.Base)
+        {
+            return _base.Keys.ToList();
+        }
         return _base.Keys.Union(_overlay.Keys).ToList();
     }
 
+    /// <summary>
+    /// Count the number of items the specified dictionary(s).
+    /// </summary>
     public int Count(WhichData which = WhichData.Both)
     {
         // count the Keys so duplicates are only counted once
         return Keys(which).Count;
     }
 
+    /// <summary>
+    /// Indicates whether the proper dictionary(s) contains the key.
+    /// </summary>
     public bool ContainsKey(string key)
     {
         key = NormalizeKey(key);
@@ -82,6 +103,9 @@ public partial class Grod
         return false;
     }
 
+    /// <summary>
+    /// Removed the specified key from both dictonaries.
+    /// </summary>
     public void Remove(string key)
     {
         key = NormalizeKey(key);

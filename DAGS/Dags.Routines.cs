@@ -5,9 +5,6 @@ namespace GRIFTools;
 
 public partial class Dags
 {
-    /// <summary>
-    /// Converts a string to an integer, or throws an error
-    /// </summary>
     private static int ConvertToInt(string value)
     {
         if (string.IsNullOrWhiteSpace(value) || value.Equals(NULL_VALUE, OIC) || value.Equals(FALSE_VALUE, OIC))
@@ -25,9 +22,6 @@ public partial class Dags
         throw new SystemException($"Value is not numeric: {value}");
     }
 
-    /// <summary>
-    /// Converts a truthy or falsey value to boolean, or throws an error
-    /// </summary>
     private static bool ConvertToBool(string value)
     {
         if (string.IsNullOrWhiteSpace(value) ||
@@ -54,17 +48,11 @@ public partial class Dags
         throw new SystemException($"Value is not boolean: {value}");
     }
 
-    /// <summary>
-    /// Converts a true or false to a boolean string
-    /// </summary>
     private static string ConvertToBoolString(bool value)
     {
         return value ? TRUE_VALUE : FALSE_VALUE;
     }
 
-    /// <summary>
-    /// Split the script into tokens for processing
-    /// </summary>
     private static string[] SplitTokens(string script)
     {
         List<string> result = [];
@@ -205,9 +193,6 @@ public partial class Dags
         return [.. result];
     }
 
-    /// <summary>
-    /// Check that the number of parameters is correct, or throws an error
-    /// </summary>
     private static void CheckParamCount(string token, List<string> paramList, int expected)
     {
         if (paramList.Count == expected)
@@ -215,9 +200,6 @@ public partial class Dags
         throw new SystemException($"Incorrect number of parameters: {token}({expected}) - Found: {paramList.Count}");
     }
 
-    /// <summary>
-    /// Check for at least the specified number of parameters, or throws an error
-    /// </summary>
     private static void CheckParamCountAtLeast(string token, List<string> paramList, int expected)
     {
         if (paramList.Count >= expected)
@@ -225,9 +207,6 @@ public partial class Dags
         throw new SystemException($"Incorrect number of parameters: {token}({expected}) - Found: {paramList.Count}");
     }
 
-    /// <summary>
-    /// Expand a string value containing a list into an actual list
-    /// </summary>
     private static List<string> ExpandList(string value, ref int pos)
     {
         List<string> result = [];

@@ -120,7 +120,13 @@ public partial class Dags
                     {
                         throw new SystemException("Array name cannot be blank");
                     }
-                    SetArray(p[0], []);
+                    var maxYKey = $"{p[0]}.max.y";
+                    var maxY = GetInt(maxYKey);
+                    for (int i = maxY; i >= 0; i--)
+                    {
+                        Data.Remove($"{p[0]}.{i}");
+                    }
+                    SetInt(maxYKey, -1);
                     return;
                 case CLEARLIST:
                     // clears the named list
@@ -129,7 +135,13 @@ public partial class Dags
                     {
                         throw new SystemException("List name cannot be blank");
                     }
-                    SetList(p[0], null);
+                    var maxKey = $"{p[0]}.max";
+                    var max = GetInt(maxKey);
+                    for (int i = max; i >= 0; i--)
+                    {
+                        Data.Remove($"{p[0]}.{i}");
+                    }
+                    SetInt(maxKey, -1);
                     return;
                 case COMMENT:
                     // comment for script documentation
@@ -317,20 +329,15 @@ public partial class Dags
                     {
                         throw new SystemException($"Invalid (x) for list: {p[1]}");
                     }
-                    list = GetList(p[0]);
-                    while (int1 > list.Count)
+                    var max = GetInt($"{p[0]}.max");
+                    if (max >= int1)
                     {
-                        list.Add("");
+                        for (int i = max + 1; i > int1; i--)
+                        {
+                            SetListItem(p[0], i, GetListItem(p[0], i - 1));
+                        }
                     }
-                    if (int1 == list.Count)
-                    {
-                        list.Add(p[2]);
-                    }
-                    else
-                    {
-                        list.Insert(int1, p[2]);
-                    }
-                    SetList(p[0], list);
+                    SetListItem(p[0], int1, p[2]);
                     return;
                 case ISBOOL:
                     // is value true or false?
