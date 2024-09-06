@@ -54,14 +54,7 @@ public static class GrodDataIO
                 }
                 if (key != "")
                 {
-                    if (value.StartsWith('['))
-                    {
-                        grod.Set(key, StringToList(value));
-                    }
-                    else
-                    {
-                        grod.Set(key, value);
-                    }
+                    grod.Set(key, value);
                 }
             }
         }
@@ -187,16 +180,7 @@ public static class GrodDataIO
         }
         foreach (string key in keys)
         {
-            var rawValue = grod.Get(key);
-            string value;
-            if (rawValue != null && rawValue.GetType() == typeof(List<string>))
-            {
-                value = ListToString((List<string>)rawValue);
-            }
-            else
-            {
-                value = rawValue?.ToString() ?? "";
-            }
+            var value = grod.Get(key);
             if (jsonFormat)
             {
                 if (needsComma)
@@ -542,49 +526,49 @@ public static class GrodDataIO
         return result.ToString();
     }
 
-    private static List<string> StringToList(string value)
-    {
-        if (!value.StartsWith('[') || !value.EndsWith(']'))
-        {
-            throw new SystemException($"Value is not a list: {value}");
-        }
-        var result = new List<string>();
-        StringBuilder item = new();
-        foreach (char c in value[1..])
-        {
-            if (c == ',' || c == ']')
-            {
-                result.Add(item.ToString());
-                item.Clear();
-            }
-            else
-            {
-                item.Append(c);
-            }
-        }
-        return result;
-    }
+    //private static List<string> StringToList(string value)
+    //{
+    //    if (!value.StartsWith('[') || !value.EndsWith(']'))
+    //    {
+    //        throw new SystemException($"Value is not a list: {value}");
+    //    }
+    //    var result = new List<string>();
+    //    StringBuilder item = new();
+    //    foreach (char c in value[1..])
+    //    {
+    //        if (c == ',' || c == ']')
+    //        {
+    //            result.Add(item.ToString());
+    //            item.Clear();
+    //        }
+    //        else
+    //        {
+    //            item.Append(c);
+    //        }
+    //    }
+    //    return result;
+    //}
 
-    private static string ListToString(List<string> rawValue)
-    {
-        StringBuilder result = new();
-        result.Append('[');
-        var comma = false;
-        foreach (string s in rawValue)
-        {
-            if (comma)
-            {
-                result.Append(',');
-            }
-            else
-            {
-                comma = true;
-            }
-            result.Append(s);
-        }
-        result.Append(']');
-        return result.ToString();
-    }
+    //private static string ListToString(List<string> rawValue)
+    //{
+    //    StringBuilder result = new();
+    //    result.Append('[');
+    //    var comma = false;
+    //    foreach (string s in rawValue)
+    //    {
+    //        if (comma)
+    //        {
+    //            result.Append(',');
+    //        }
+    //        else
+    //        {
+    //            comma = true;
+    //        }
+    //        result.Append(s);
+    //    }
+    //    result.Append(']');
+    //    return result.ToString();
+    //}
 
     #endregion
 }

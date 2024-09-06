@@ -18,6 +18,7 @@ public partial class Dags
             List<string> list = [];
             List<List<string>> array = [];
             var token = tokens[index++];
+            int max, maxY, maxX;
 
             // static value
             if (!token.StartsWith('@'))
@@ -120,13 +121,15 @@ public partial class Dags
                     {
                         throw new SystemException("Array name cannot be blank");
                     }
-                    var maxYKey = $"{p[0]}.max.y";
-                    var maxY = GetInt(maxYKey);
-                    for (int i = maxY; i >= 0; i--)
+                    maxY = GetInt($"{p[0]}.max.y");
+                    maxX = GetInt($"{p[0]}.max.x");
+                    for (int y = 0; y <= maxY; y++)
                     {
-                        Data.Remove($"{p[0]}.{i}");
+                        for (int x = 0; x <= maxX; x++)
+                        {
+                            Set($"{p[0]}.{y}.{x}", "");
+                        }
                     }
-                    SetInt(maxYKey, -1);
                     return;
                 case CLEARLIST:
                     // clears the named list
@@ -135,13 +138,11 @@ public partial class Dags
                     {
                         throw new SystemException("List name cannot be blank");
                     }
-                    var maxKey = $"{p[0]}.max";
-                    var max = GetInt(maxKey);
-                    for (int i = max; i >= 0; i--)
+                    max = GetInt($"{p[0]}.max");
+                    for (int i = 0; i <= max; i++)
                     {
-                        Data.Remove($"{p[0]}.{i}");
+                        Set($"{p[0]}.{i}", "");
                     }
-                    SetInt(maxKey, -1);
                     return;
                 case COMMENT:
                     // comment for script documentation
@@ -329,7 +330,7 @@ public partial class Dags
                     {
                         throw new SystemException($"Invalid (x) for list: {p[1]}");
                     }
-                    var max = GetInt($"{p[0]}.max");
+                    max = GetInt($"{p[0]}.max");
                     if (max >= int1)
                     {
                         for (int i = max + 1; i > int1; i--)
@@ -408,8 +409,8 @@ public partial class Dags
                     {
                         throw new SystemException("List name cannot be blank");
                     }
-                    list = GetList(p[0]);
-                    result.Append(list.Count);
+                    max = GetInt($"{p[0]}.max");
+                    result.Append(max);
                     return;
                 case LOWER:
                     // lowercase value
@@ -525,12 +526,15 @@ public partial class Dags
                     {
                         throw new SystemException($"Invalid (x) for list: {p[1]}");
                     }
-                    list = GetList(p[0]);
-                    if (int1 < list.Count)
+                    max = GetInt($"{p[0]}.max");
+                    if (max >= int1)
                     {
-                        list.RemoveAt(int1);
-                        SetList(p[0], list);
+                        for (int i = int1; i < max; i++)
+                        {
+                            SetListItem(p[0], i, GetListItem(p[0], i + 1));
+                        }
                     }
+                    SetListItem(p[0], max, "");
                     return;
                 case REPLACE:
                     // in value0, replace value1 with value2
@@ -1055,13 +1059,11 @@ public partial class Dags
             }
             newTokens.Append(token);
         } while (index < tokens.Length);
-        var valueList = Data.Get(p[1]);
-        if (valueList == null || valueList.GetType() != typeof(List<string>))
+        int max = GetInt($"{p[1]}.max");
+        for (int i = 0; i <= max; i++)
         {
-            throw new ArgumentException($"Value is not a list: Key = {p[1]}");
-        }
-        foreach (var value in (List<string>)valueList)
-        {
+            var key = $"{p[1]}.{i}";
+            var value = Get(key);
             if (!string.IsNullOrEmpty(value))
             {
                 var script = newTokens.ToString().Replace($"${p[0]}", value);
