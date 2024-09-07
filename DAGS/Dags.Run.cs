@@ -304,6 +304,17 @@ public partial class Dags
                     }
                     result.Append(temp1);
                     return;
+                case GOTO:
+                    // move to the statment after @label(value)
+                    CheckParamCount(token, p, 1);
+                    for (int i = 0; i < tokens.Length - 1; i++)
+                    {
+                        if (tokens[i] == LABEL && tokens[i + 1] == p[0] && tokens[i+2] == ")")
+                        {
+                            index = i + 3;
+                        }
+                    }
+                    return;
                 case GT:
                     // is first value greater than second
                     CheckParamCount(token, p, 2);
@@ -386,6 +397,10 @@ public partial class Dags
                     temp1 = Get(p[0]);
                     answer = temp1.StartsWith('@');
                     result.Append(ConvertToBoolString(answer));
+                    return;
+                case LABEL:
+                    // label for goto
+                    CheckParamCount(token, p, 1);
                     return;
                 case LE:
                     // is first value less or equal to second

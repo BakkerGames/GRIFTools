@@ -38,6 +38,14 @@ false
 
 >Executes the script specified by "script". "script" should be quoted.
 
+@goto(value)
+
+>Moves the script pointer to the statement after @label(value).
+
+@label(value)
+
+>Value to be used by @goto(value) statement.
+
 @script(key)
 
 >Runs the script stored in "key".
@@ -73,6 +81,9 @@ false
 
 >Divides integer stored in "key" by integer "value". Stores the remainder back into "key".
 
+@negto(key)
+
+>Negates the integer stored in "key". Stores it back into "key".
 
 ## Output Statements
 
@@ -134,6 +145,10 @@ false
 @mul(value1,value2)
 
 >Returns the integer answer from multiplying "value1" and "value2".
+
+@neg(value1)
+
+>Negates the integer answer for "value1".
 
 @replace(value,old,new)
 

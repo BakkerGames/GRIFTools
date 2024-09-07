@@ -40,6 +40,7 @@ public static class DagsConstants
     public const string GETINCHANNEL = "@getinchannel";
     public const string GETLIST = "@getlist(";
     public const string GETVALUE = "@getvalue(";
+    public const string GOTO = "@goto(";
     public const string GT = "@gt(";
     public const string IF = "@if";
     public const string INSERTATLIST = "@insertatlist(";
@@ -49,6 +50,7 @@ public static class DagsConstants
     public const string ISNUMBER = "@isnumber(";
     public const string ISNUMBERDATA = "@isnumberdata(";
     public const string ISSCRIPTDATA = "@isscriptdata(";
+    public const string LABEL = "@label(";
     public const string LE = "@le(";
     public const string LISTLENGTH = "@listlength(";
     public const string LOWER = "@lower(";
