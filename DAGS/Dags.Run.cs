@@ -304,7 +304,7 @@ public partial class Dags
                     }
                     result.Append(temp1);
                     return;
-                case GOTO:
+                case GOLABEL:
                     // move to the statment after @label(value)
                     CheckParamCount(token, p, 1);
                     for (int i = 0; i < tokens.Length - 1; i++)
@@ -399,7 +399,7 @@ public partial class Dags
                     result.Append(ConvertToBoolString(answer));
                     return;
                 case LABEL:
-                    // label for goto
+                    // label for golabel
                     CheckParamCount(token, p, 1);
                     return;
                 case LE:

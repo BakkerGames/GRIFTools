@@ -16,7 +16,7 @@ public partial class Dags
         result.AppendLine("Statements:");
         result.AppendLine($"   {COMMENT}x)");
         result.AppendLine($"   {EXEC}script)");
-        result.AppendLine($"   {GOTO}x)");
+        result.AppendLine($"   {GOLABEL}x)");
         result.AppendLine($"   {LABEL}x)");
         result.AppendLine($"   {RETURN}");
         result.AppendLine($"   {SCRIPT}key)");

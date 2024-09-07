@@ -272,7 +272,7 @@ public partial class Dags
         GETINCHANNEL,
         GETLIST,
         GETVALUE,
-        GOTO,
+        GOLABEL,
         GT,
         IF,
         INSERTATLIST,

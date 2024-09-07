@@ -1,6 +1,6 @@
 # GRIFTools
 
-> [!NOTE]  
+> [!NOTE]
 > GRIFTools is still in active development, so expect certain features to change or disappear as development continues.
 
 GRIFTools is a library containing the GROD, DAGS, and GrodDataIO classes used by GRIF and similar projects. Putting them together in a single library simplifies development and distribution.
