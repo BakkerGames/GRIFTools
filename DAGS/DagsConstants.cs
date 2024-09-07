@@ -59,6 +59,8 @@ public static class DagsConstants
     public const string MUL = "@mul(";
     public const string MULTO = "@multo(";
     public const string NE = "@ne(";
+    public const string NEG = "@neg(";
+    public const string NEGTO = "@negto(";
     public const string NL = "@nl";
     public const string NOT = "@not";
     public const string OR = "@or";

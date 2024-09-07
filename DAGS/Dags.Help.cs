@@ -27,6 +27,7 @@ public partial class Dags
         result.AppendLine($"   {DIVTO}key,x)");
         result.AppendLine($"   {MODTO}key,x)");
         result.AppendLine($"   {MULTO}key,x)");
+        result.AppendLine($"   {NEGTO}key)");
         result.AppendLine($"   {SUBTO}key,x)");
         result.AppendLine();
 
@@ -48,6 +49,7 @@ public partial class Dags
         result.AppendLine($"   {LOWER}x)");
         result.AppendLine($"   {MOD}x,y)");
         result.AppendLine($"   {MUL}x,y)");
+        result.AppendLine($"   {NEG}x)");
         result.AppendLine($"   {REPLACE}value,old,new)");
         result.AppendLine($"   {RND}x)");
         result.AppendLine($"   {SUB}x,y)");

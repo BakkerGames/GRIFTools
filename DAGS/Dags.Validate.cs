@@ -291,6 +291,8 @@ public partial class Dags
         MUL,
         MULTO,
         NE,
+        NEG,
+        NEGTO,
         NL,
         NOT,
         OR,

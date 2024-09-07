@@ -507,6 +507,28 @@ public partial class Dags
                     }
                     result.Append(ConvertToBoolString(answer));
                     return;
+                case NEG:
+                    // negate a value
+                    CheckParamCount(token, p, 1);
+                    int1 = ConvertToInt(p[0]);
+                    numericAnswer = -(long)int1;
+                    if (numericAnswer > int.MaxValue || numericAnswer + 1 < -int.MaxValue)
+                    {
+                        throw new SystemException($"{NEG}{int1}): Numeric overflow");
+                    }
+                    result.Append(numericAnswer);
+                    return;
+                case NEGTO:
+                    // negate an existing value
+                    CheckParamCount(token, p, 1);
+                    int1 = GetInt(p[0]);
+                    numericAnswer = -(long)int1;
+                    if (numericAnswer > int.MaxValue || numericAnswer + 1 < -int.MaxValue)
+                    {
+                        throw new SystemException($"{NEGTO}[{p[0]}]{int1}): Numeric overflow");
+                    }
+                    Set(p[0], numericAnswer.ToString());
+                    return;
                 case RAND:
                     // is random 0-99 less than percent value (1-100)
                     CheckParamCount(token, p, 1);
