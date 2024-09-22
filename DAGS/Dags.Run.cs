@@ -378,14 +378,7 @@ public partial class Dags
                     answer = p[0] != "" && int.TryParse(p[0], out _);
                     result.Append(ConvertToBoolString(answer));
                     return;
-                case ISNUMBERDATA:
-                    // is the raw value a number
-                    CheckParamCount(token, p, 1);
-                    temp1 = Get(p[0]);
-                    answer = temp1 != "" && int.TryParse(temp1, out _);
-                    result.Append(ConvertToBoolString(answer));
-                    return;
-                case ISSCRIPTDATA:
+                case ISSCRIPT:
                     // is the raw value a script (starts with '@')
                     CheckParamCount(token, p, 1);
                     temp1 = Get(p[0]);

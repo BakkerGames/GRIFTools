@@ -8,8 +8,6 @@ Keys cannot be null, "", or contain only whitespace, and should not have leading
 
 Keys and values as function parameters can be text values or strings built out of other functions.
 
-"Raw value" refers to the value from the dictionary with no processing. Everything else will run "value" as a script if it starts with "@" and returns the final result.
-
 Some functions take keys and operate directly on the dictionary, while other take values and operate on those values. Be careful of this! `@true(key)` doesn't check the value but is always false (the string "key" isn't truthy), while `@true(@get(key))` gets the correct answer from the value.
 
 At times it might be necessary to add quotes around script values so they don't execute immediately. `@set(key,value)` is one such situation, when the value is to be stored as a script and not the answer. The value will need to be surrounded by quotes and internal quotes escaped.
@@ -56,7 +54,7 @@ false
 
 @swap(key1,key2)
 
->Swaps the raw values stored in "key1" and "key2".
+>Swaps the values stored in "key1" and "key2".
 
 
 ## Numeric Statements
@@ -128,7 +126,7 @@ false
 
 @get(key)
 
->Returns the raw value for "key" from the dictionary.
+>Returns the value for "key" from the dictionary.
 
 @getvalue(key)
 
@@ -240,15 +238,11 @@ Any functions which returns truthy or falsey values may be defined and used as "
 
 @isnumber(value)
 
->Returns true if the value is an integer number.
+>Returns true if "value" is an integer number.
 
-@isnumberdata(key)
+@isscript(key)
 
->Returns true if the raw value for "key" is an integer number.
-
-@isscriptdata(key)
-
->Checks if the raw value for "key" starts with "@".
+>Checks if the value for "key" starts with "@". Does not run the script.
 
 @le(value1,value2)
 
@@ -339,7 +333,7 @@ These commands allow named lists of values to be stored as a single group instea
 
 @getlist(name,pos)
 
->Gets the raw value at position "pos" (starting at 0) for the list "name". If "pos" is beyond the end of the list, "" is returned.
+>Gets the value at position "pos" (starting at 0) for the list "name". If "pos" is beyond the end of the list, "" is returned.
 
 @insertatlist(name,pos,value)
 
@@ -370,7 +364,7 @@ Note that the array values are referenced by row (y) first and then column (x), 
 
 @getarray(name,y,x)
 
->Gets the raw value at position "y,x" (starting at 0,0) for the array "name". If either "y" or "x" is beyond the edge of the stored values, "" is returned.
+>Gets the value at position "y,x" (starting at 0,0) for the array "name". If either "y" or "x" is beyond the edge of the stored values, "" is returned.
 
 @setarray(name,y,x,value)
 
