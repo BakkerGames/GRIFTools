@@ -76,14 +76,13 @@ public partial class Dags
         result.AppendLine($"   {GE}x,y)");
         result.AppendLine($"   {GT}x,y)");
         result.AppendLine($"   {ISBOOL}x)");
-        result.AppendLine($"   {ISNULL}x)");
-        result.AppendLine($"   {ISNULLDATA}x)");
         result.AppendLine($"   {ISNUMBER}x)");
         result.AppendLine($"   {ISNUMBERDATA}x)");
         result.AppendLine($"   {ISSCRIPTDATA}x)");
         result.AppendLine($"   {LE}x,y)");
         result.AppendLine($"   {LT}x,y)");
         result.AppendLine($"   {NE}x,y)");
+        result.AppendLine($"   {NULL}x)");
         result.AppendLine($"   {RAND}x)");
         result.AppendLine($"   {TRUE}x)");
         result.AppendLine();

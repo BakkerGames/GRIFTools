@@ -45,8 +45,6 @@ public static class DagsConstants
     public const string IF = "@if";
     public const string INSERTATLIST = "@insertatlist(";
     public const string ISBOOL = "@isbool(";
-    public const string ISNULL = "@isnull(";
-    public const string ISNULLDATA = "@isnulldata(";
     public const string ISNUMBER = "@isnumber(";
     public const string ISNUMBERDATA = "@isnumberdata(";
     public const string ISSCRIPTDATA = "@isscriptdata(";
@@ -65,6 +63,7 @@ public static class DagsConstants
     public const string NEGTO = "@negto(";
     public const string NL = "@nl";
     public const string NOT = "@not";
+    public const string NULL = "@null(";
     public const string OR = "@or";
     public const string RAND = "@rand(";
     public const string REMOVEATLIST = "@removeatlist(";

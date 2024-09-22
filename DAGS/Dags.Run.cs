@@ -365,19 +365,6 @@ public partial class Dags
                     }
                     result.Append(ConvertToBoolString(answer));
                     return;
-                case ISNULL:
-                    // is the value null or empty
-                    CheckParamCount(token, p, 1);
-                    answer = p[0] == "" || p[0].Equals(NULL_VALUE, OIC);
-                    result.Append(ConvertToBoolString(answer));
-                    return;
-                case ISNULLDATA:
-                    // is the raw value null or empty
-                    CheckParamCount(token, p, 1);
-                    temp1 = Get(p[0]);
-                    answer = temp1 == "";
-                    result.Append(ConvertToBoolString(answer));
-                    return;
                 case ISNUMBER:
                     // is the value a number
                     CheckParamCount(token, p, 1);
@@ -543,6 +530,12 @@ public partial class Dags
                         throw new SystemException($"{NEGTO}[{p[0]}]{int1}): Numeric overflow");
                     }
                     Set(p[0], numericAnswer.ToString());
+                    return;
+                case NULL:
+                    // is the value null or empty or NULL_VALUE
+                    CheckParamCount(token, p, 1);
+                    answer = p[0] == "" || p[0].Equals(NULL_VALUE, OIC);
+                    result.Append(ConvertToBoolString(answer));
                     return;
                 case RAND:
                     // is random 0-99 less than percent value (1-100)

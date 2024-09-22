@@ -234,14 +234,6 @@ Any functions which returns truthy or falsey values may be defined and used as "
 
 >Returns true if "value" is truthy or falsey.
 
-@isnull(value)
-
->Returns true if "value" is "" or "null".
-
-@isnulldata(key)
-
->Returns true if the raw value for "key" is "" or "null" or undefined.
-
 @isnumber(value)
 
 >Returns true if the value is an integer number.
@@ -265,6 +257,10 @@ Any functions which returns truthy or falsey values may be defined and used as "
 @ne(value1,value2)
 
 >Checks if the two values are not equal. Compares as integers if both convert to integers, otherwise compares as strings (ignoring case).
+
+@null(value)
+
+>Returns true if "value" is "" or "null".
 
 @rand(value)
 
