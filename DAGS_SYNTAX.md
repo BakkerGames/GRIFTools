@@ -218,6 +218,10 @@ Any functions which returns truthy or falsey values may be defined and used as "
 
 >Checks if the two values are equal. Compares as integers if both convert to integers, otherwise compares as strings (ignoring case).
 
+@exists(key)
+
+>Returns true if "key" exists and the value is not "" or "null".
+
 @false(value)
 
 >Returns true if "value" is falsey. Returns false if the value is truthy or isn't boolean.

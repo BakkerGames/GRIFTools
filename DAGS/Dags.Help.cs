@@ -72,6 +72,7 @@ public partial class Dags
 
         result.AppendLine("If conditions:");
         result.AppendLine($"   {EQ}x,y)");
+        result.AppendLine($"   {EXISTS}key)");
         result.AppendLine($"   {FALSE}x)");
         result.AppendLine($"   {GE}x,y)");
         result.AppendLine($"   {GT}x,y)");

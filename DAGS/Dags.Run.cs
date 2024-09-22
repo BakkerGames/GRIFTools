@@ -208,6 +208,13 @@ public partial class Dags
                     }
                     result.Append(value);
                     return;
+                case EXISTS:
+                    // does the key exist with a non-null value?
+                    CheckParamCount(token, p, 1);
+                    temp1 = Get(p[0]);
+                    answer = temp1 != "" && !temp1.Equals(NULL_VALUE, OIC);
+                    result.Append(ConvertToBoolString(answer));
+                    return;
                 case FALSE:
                     // is the value false (or falsey). false if error.
                     CheckParamCount(token, p, 1);

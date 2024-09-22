@@ -261,6 +261,7 @@ public partial class Dags
         ENDIF,
         EQ,
         EXEC,
+        EXISTS,
         FALSE,
         FOR,
         FOREACHKEY,

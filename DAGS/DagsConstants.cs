@@ -29,6 +29,7 @@ public static class DagsConstants
     public const string ENDIF = "@endif";
     public const string EQ = "@eq(";
     public const string EXEC = "@exec(";
+    public const string EXISTS = "@exists(";
     public const string FALSE = "@false(";
     public const string FOR = "@for(";
     public const string FOREACHKEY = "@foreachkey(";
