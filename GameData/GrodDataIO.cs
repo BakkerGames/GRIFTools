@@ -15,8 +15,8 @@ public static class GrodDataIO
         {
             throw new FileNotFoundException(path);
         }
-
-        LoadDataFromString(File.ReadAllText(path), grod);
+        var data = File.ReadAllText(path);
+        LoadDataFromString(data, grod);
     }
 
     /// <summary>
