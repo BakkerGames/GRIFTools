@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using static GRIFTools.DagsConstants;
+using static DAGSScriptLibrary.DAGSConstants;
 
 namespace GRIFTools;
 
@@ -316,7 +316,7 @@ public partial class Dags
                     CheckParamCount(token, p, 1);
                     for (int i = 0; i < tokens.Length - 1; i++)
                     {
-                        if (tokens[i] == LABEL && tokens[i + 1] == p[0] && tokens[i+2] == ")")
+                        if (tokens[i] == LABEL && tokens[i + 1] == p[0] && tokens[i + 2] == ")")
                         {
                             index = i + 3;
                         }

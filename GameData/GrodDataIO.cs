@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
+using static DAGSScriptLibrary.DAGSRoutines;
 using static GRIFTools.GrodEnums;
 
 namespace GRIFTools;
@@ -201,7 +202,7 @@ public static class GrodDataIO
                 if (jsonFormat)
                 {
                     result.Append(" \"");
-                    value = Dags.CompressScript(value);
+                    value = CompressScript(value);
                     result.Append(EncodeString(value));
                     result.Append('\"');
                     needsComma = true;
@@ -210,7 +211,7 @@ public static class GrodDataIO
                 {
                     try
                     {
-                        value = Dags.PrettyScript(value, true);
+                        value = PrettyScript(value, true);
                     }
                     catch (Exception)
                     {
@@ -232,7 +233,7 @@ public static class GrodDataIO
                 {
                     try
                     {
-                        value = Dags.PrettyScript(value, true);
+                        value = PrettyScript(value, true);
                     }
                     catch (Exception)
                     {

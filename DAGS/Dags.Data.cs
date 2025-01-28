@@ -1,4 +1,4 @@
-﻿using static GRIFTools.DagsConstants;
+﻿using static DAGSScriptLibrary.DAGSConstants;
 
 namespace GRIFTools;
 
