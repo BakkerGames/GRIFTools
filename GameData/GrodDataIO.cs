@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
-using static DAGSScriptLibrary.DAGSRoutines;
 using static GRIFTools.GrodEnums;
+using static GRIFTools.DAGSRoutines;
 
 namespace GRIFTools;
 
@@ -16,8 +16,8 @@ public static class GrodDataIO
         {
             throw new FileNotFoundException(path);
         }
-        var data = File.ReadAllText(path);
-        LoadDataFromString(data, grod);
+
+        LoadDataFromString(File.ReadAllText(path), grod);
     }
 
     /// <summary>

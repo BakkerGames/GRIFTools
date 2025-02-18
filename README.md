@@ -31,6 +31,10 @@ Many of the built-in functions directly access the data from the GROD dictionary
 
 DAGS can be extended by creating new functions and adding them to the dictionary. They are used exactly like the built-in functions.
 
+# DAGS Script Library
+
+This contains the DAGS constants and routines for handling DAGS scripts.
+
 # GameData - Loading and saving GROD data files
 
 GameData is a class to handle the loading and saving of GROD data files.

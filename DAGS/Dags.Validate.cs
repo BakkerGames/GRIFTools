@@ -1,6 +1,5 @@
 ﻿using System.Text;
-using static DAGSScriptLibrary.DAGSConstants;
-using static DAGSScriptLibrary.DAGSRoutines;
+using static GRIFTools.DAGSConstants;
 
 namespace GRIFTools;
 

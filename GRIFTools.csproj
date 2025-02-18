@@ -4,8 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>2025.1.26</Version>
-    <Copyright>Copyright (C) 2025 by Scott Bakker</Copyright>
+    <Version>2025.2.17</Version>
+    <Copyright>Copyright (C) 2024-2025 by Scott Bakker</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
@@ -20,10 +20,6 @@
   <ItemGroup>
     <None Remove=".gitattributes" />
     <None Remove=".gitignore" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\DAGSScriptLibrary\DAGSScriptLibrary\DAGSScriptLibrary.csproj" />
   </ItemGroup>
 
 </Project>
